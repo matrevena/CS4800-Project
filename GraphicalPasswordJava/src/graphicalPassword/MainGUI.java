@@ -3,18 +3,17 @@ package graphicalPassword;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
+import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.OverlayLayout;
 
 import java.awt.EventQueue;
+import java.awt.Button;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 
 public class MainGUI {
 private JFrame mainFrame; //Global declaration of the main window
@@ -56,20 +55,10 @@ private JFrame mainFrame; //Global declaration of the main window
 		menuBar.setBounds(0, 0, 1264, 21);
 		mainFrame.getContentPane().add(menuBar);
 		
-		JMenu controlsMenu = new JMenu("Controls");
-		menuBar.add(controlsMenu);
-		
-		JMenuItem editPassword = new JMenuItem("Edit Password");
-		controlsMenu.add(editPassword);
-		
-		JMenuItem loadPassword = new JMenuItem("Load Password");
-		controlsMenu.add(loadPassword);
-		
-		JMenuItem createPassword = new JMenuItem("Create Password");
-		controlsMenu.add(createPassword);
-		
-		JMenu userMenu = new JMenu("User Settings");
-		menuBar.add(userMenu);
+		//Combo box that houses all controls
+		JComboBox<Object> comboBox = new JComboBox<Object>();
+		comboBox.setToolTipText("Controls");
+		menuBar.add(comboBox);
 		
 		//The panel that holds password creation display circles
 		JPanel overlayPanel = new JPanel();
@@ -101,32 +90,29 @@ private JFrame mainFrame; //Global declaration of the main window
 		        int y=e.getY();
 		        //System.out.println(x+","+y);			//TEST
 		        
-		        CreatePassword.validateClick(x, y, overlayPanel);
+		        //CreatePassword.validateClick(x, y, overlayPanel);
 		        mainFrame.repaint();
 		    }
 		});
 		
-		editPassword.addActionListener(new ActionListener() {
+		//Temporary upload image button
+		Button button = new Button("Upload Image");
+		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0)
 			{
-				JOptionPane.showMessageDialog(mainFrame, "Need to do.", "Information", JOptionPane.INFORMATION_MESSAGE);
+				FileChooser.main(mainFrame, mainPanel, overlayPanel, pictureLabel);
 			}
 		});
-		
-		loadPassword.addActionListener(new ActionListener() {
+		menuBar.add(button);
+		//Temporary Password Creation
+		Button createButton = new Button("Create Password Boxes"); 
+		createButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0)
 			{
-				JOptionPane.showMessageDialog(mainFrame, "Need to do.", "Information", JOptionPane.INFORMATION_MESSAGE);
+				CreatePassword.main(mainFrame, mainPanel, overlayPanel, pictureLabel);
 			}
 		});
-		
-		createPassword.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0)
-			{
-				JOptionPane.showMessageDialog(mainFrame, "First you need to upload an image that will be used for your graphical Password.", "Information", JOptionPane.INFORMATION_MESSAGE);
-				CreatePassword.main(mainFrame, mainPanel, overlayPanel, pictureLabel, menuBar, controlsMenu, userMenu);
-			}
-		});
+		menuBar.add(createButton);
 		
 	}
 }
