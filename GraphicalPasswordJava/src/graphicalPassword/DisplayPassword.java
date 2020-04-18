@@ -15,21 +15,16 @@ public class DisplayPassword {
 	static JLabel circleLabel6 = new JLabel("");
 	static JLabel circleLabel7 = new JLabel("");
 	static JLabel circleLabel8 = new JLabel("");
-	public static void main( int x, int y, JPanel overlayPanel)
+	public static void main()
 	{		
+
+	}
+	
+	public static void displayCreationCircles(int x, int y, JPanel overlayPanel)
+	{
 		if (circleCounter == 0)
 		{
-			overlayPanel.remove(circleLabel0);
-			overlayPanel.remove(circleLabel1);
-			overlayPanel.remove(circleLabel2);
-			overlayPanel.remove(circleLabel3);
-			overlayPanel.remove(circleLabel4);
-			overlayPanel.remove(circleLabel5);
-			overlayPanel.remove(circleLabel6);
-			overlayPanel.remove(circleLabel7);
-			overlayPanel.remove(circleLabel8);
-			overlayPanel.revalidate();
-			overlayPanel.repaint();
+			deleteCreationCircles(overlayPanel);
 		}
 		if (circleCounter < 9) {
 			int width = 50;
@@ -99,6 +94,21 @@ public class DisplayPassword {
 			
 			circleCounter++;
 		}
+	}
+	
+	public static void deleteCreationCircles(JPanel overlayPanel)
+	{
+		overlayPanel.remove(circleLabel0);
+		overlayPanel.remove(circleLabel1);
+		overlayPanel.remove(circleLabel2);
+		overlayPanel.remove(circleLabel3);
+		overlayPanel.remove(circleLabel4);
+		overlayPanel.remove(circleLabel5);
+		overlayPanel.remove(circleLabel6);
+		overlayPanel.remove(circleLabel7);
+		overlayPanel.remove(circleLabel8);
+		overlayPanel.revalidate();
+		overlayPanel.repaint();
 	}
 	
 	public static void resetCounter()
