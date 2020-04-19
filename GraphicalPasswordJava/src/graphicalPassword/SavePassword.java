@@ -1,9 +1,14 @@
 package graphicalPassword;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Base64;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -17,7 +22,7 @@ public class SavePassword {
 		
 	}
 	
-	static void savePass(JFrame mainFrame, JPanel mainPanel, JPanel overlayPanel, JLabel pictureLabel, String passName)
+	static void savePass(JFrame mainFrame, JPanel mainPanel, JPanel overlayPanel, JLabel pictureLabel, String passName, String textPass)
 	{
 		String currentDir = System.getProperty("user.dir");
 		
@@ -31,6 +36,7 @@ public class SavePassword {
 		}
 		*/
 		
+		//Save Image
 		String picExtension = "png";
 		String picFolderName = "UserImages";
 		File picFolderDir = new File(currentDir + File.separator + picFolderName);
@@ -53,6 +59,43 @@ public class SavePassword {
 		{
 			System.out.println("Write error for " + picSaveDir.getPath() + ": " + e.getMessage());
 		}
+		
+		//Save Text Password
+		String textPassFolderName = "EncryptedData";
+		File textPassFolderDir = new File(currentDir + File.separator + textPassFolderName);
+		
+		if (textPassFolderDir.exists() != true)
+		{
+			textPassFolderDir.mkdir();
+		}
+		
+		File textPassSaveDir = new File(currentDir + File.separator + textPassFolderName + File.separator + passName + "_Encrypted" + ".txt");
+		File keySaveDir = new File(currentDir + File.separator + textPassFolderName + File.separator + passName + "_Key" + ".txt");
+		
+		try
+		{
+			SecretKey encrytionKey = Encryption.generateKey("AES");
+			Cipher crypto;
+			crypto = Cipher.getInstance("AES");
+			byte[] encryptedData = Encryption.encryptString(textPass, encrytionKey, crypto);
+			String encryptedString = new String(encryptedData);
+			String encodedKey = Base64.getEncoder().encodeToString(encrytionKey.getEncoded());
+			//String decrypted = Encryption.decryptString(encryptedData, MyKey, Crypto);
+			//System.out.println(decrypted);
+			
+			FileWriter passFileWriter = new FileWriter(textPassSaveDir);
+		    passFileWriter.write(encryptedString);
+		    passFileWriter.close();
+		    
+			FileWriter keyFileWriter = new FileWriter(keySaveDir);
+		    keyFileWriter.write(encodedKey);
+		    keyFileWriter.close();
+		}
+		catch(Exception e) 
+		{
+			System.out.println("Encyption Error: " + e);
+		}
+		
 	}
 	
 	static String fileChooser(String directory)

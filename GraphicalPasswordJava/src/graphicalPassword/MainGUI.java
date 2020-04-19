@@ -1,5 +1,6 @@
 package graphicalPassword;
 
+import javax.crypto.SecretKey;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
@@ -110,7 +111,10 @@ private JFrame mainFrame; //Global declaration of the main window
 		loadPassword.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0)
 			{
-				JOptionPane.showMessageDialog(mainFrame, "Need to do.", "Information", JOptionPane.INFORMATION_MESSAGE);
+				String passName = "test";
+				SecretKey key = null;
+				key = LoadPassword.loadKey(passName, key);
+				JOptionPane.showMessageDialog(mainFrame, key, "Information", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 		

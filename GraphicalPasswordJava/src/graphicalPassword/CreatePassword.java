@@ -28,10 +28,7 @@ public class CreatePassword {
 	{	
 		String filePath = SavePassword.fileChooser(directory);
 		
-		initiateEdit(filePath, mainFrame, mainPanel, overlayPanel, pictureLabel, menuBar, controlsMenu, userMenu);
-
-		//save graphical password
-		
+		initiateEdit(filePath, mainFrame, mainPanel, overlayPanel, pictureLabel, menuBar, controlsMenu, userMenu);		
 	}
 	
 	public static void initiateEdit(String filePath, JFrame mainFrame, JPanel mainPanel, JPanel overlayPanel, JLabel pictureLabel, JMenuBar menuBar, JMenu controlsMenu, JMenu userMenu)
@@ -79,7 +76,10 @@ public class CreatePassword {
 						if (passNameTfR.getText().length() >= 4 && passNameTfR.getText().length() <= 20)
 						{
 							String passName = passNameTfR.getText();
-							SavePassword.savePass(mainFrame, mainPanel, overlayPanel, pictureLabel, passName);
+							
+							String textPass = getTextPass("", textPasswordTfR);
+							
+							SavePassword.savePass(mainFrame, mainPanel, overlayPanel, pictureLabel, passName, textPass);
 							
 							endCreation(mainFrame, mainPanel, overlayPanel, pictureLabel, menuBar,
 									controlsMenu, userMenu, savePassBtn, endCreationBtn, creationPanelR, creationPanelL);
@@ -95,7 +95,10 @@ public class CreatePassword {
 						if (passNameTfL.getText().length() >= 4 && passNameTfL.getText().length() <= 20)
 						{
 							String passName = passNameTfL.getText();
-							SavePassword.savePass(mainFrame, mainPanel, overlayPanel, pictureLabel, passName);
+							
+							String textPass = getTextPass("", textPasswordTfL);
+							
+							SavePassword.savePass(mainFrame, mainPanel, overlayPanel, pictureLabel, passName, textPass);
 							
 							endCreation(mainFrame, mainPanel, overlayPanel, pictureLabel, menuBar,
 									controlsMenu, userMenu, savePassBtn, endCreationBtn, creationPanelR, creationPanelL);
@@ -140,6 +143,11 @@ public class CreatePassword {
 		mainPanel.setBounds(0, 20, 1280, 720);
 		pictureLabel.setBounds(0, 20, 1280, 720);
 		*/
+	}
+	
+	public static String getTextPass(String textPass, JTextField textPasswordTf)
+	{
+		return "";
 	}
 	
 	public static void userCustomization(JFrame mainFrame, JPanel mainPanel, JPanel overlayPanel, JLabel pictureLabel, JPanel creationPanelR, JPanel creationPanelL, JTextField passNameTfR, JTextField textPasswordTfR, JTextField passNameTfL, JTextField textPasswordTfL)
