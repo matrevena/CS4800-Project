@@ -1,9 +1,12 @@
 package graphicalPassword;
+//Main Author: Peter Giblin
+//Matthaw wrote the initial ApprovePassword class and helped design this version
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -13,140 +16,257 @@ import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import graphicalPassword.MainGUI.Mode;
+
 public class ApprovePassword {
-	static boolean enterMode = false;
 	static int clickCounter = 0;
-	static MouseAdapter captureClicks = new MouseAdapter(){};
+	static int[][] enterClickCoords = new int[9][2];
+	static int[] enterClickSizes = new int[9];
 	
+	static MouseAdapter captureClicks = new MouseAdapter(){};
+	static ActionListener enterPassAct = new ActionListener(){
+		public void actionPerformed(ActionEvent e) {
+	}};
+	static ActionListener endEnterModeAct = new ActionListener(){
+		public void actionPerformed(ActionEvent e) {
+	}};
+		
 	void main()
 	{
 		
 	}
 	
-	public static void initiateEnterMode(int[][] clickCoords, String textPass, JFrame mainFrame, JPanel overlayPanel, JLabel pictureLabel,
+	public static void initiateEnterMode(JFrame mainFrame, JPanel mainPanel, JPanel overlayPanel, JLabel pictureLabel,
 			JMenuBar menuBar, JMenu controlsMenu, JMenu userMenu, JButton enterPassBtn, JButton endEnterModeBtn)
 	{
-		//TEMP////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		int size = 50;
-		//TEMP////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		JOptionPane.showMessageDialog(mainFrame, "Select the password you wish to load.", "Information", JOptionPane.INFORMATION_MESSAGE);
 		
-		enterMode = true;
+		cleanActionListeners(enterPassBtn, endEnterModeBtn, pictureLabel);
 		
-		controlsMenu.setEnabled(false);
-		userMenu.setEnabled(false);
-		enterPassBtn.setEnabled(false);
+		String directory = System.getProperty("user.dir") + File.separator + "UserImages";
+		String filePath = MainGUI.fileChooser(directory);
 		
-		mainFrame.revalidate();
-		mainFrame.repaint();
-
-		int numOfCoords = countArrayCoords(clickCoords);
+		File loadedPic = new File(filePath);
+		String passName = loadedPic.getName().substring(0, loadedPic.getName().length() - 4);
 		
-		captureClicks = new MouseAdapter() {
-			public void mouseClicked(MouseEvent e)
-		    {
-		    	int x=e.getX();
-		        int y=e.getY();
-		        
-		        if (clickCounter < numOfCoords)
-		        {
-		        	int [] correctCoords = clickCoords[clickCounter];
-		        	
-		        	int [] checkingCoords = new int[2];
-		        	checkingCoords[0] = x;
-		        	checkingCoords[1] = y;
-		        	
-		        	boolean correct = compareCoords(correctCoords, checkingCoords, size);
-		        	
-		        	if (!correct)
-		        	{
-		        		clickCounter = 0;
-		        		DisplayPassword.deleteCreationCircles(overlayPanel, mainFrame);
-		        	}
-		        	else
-		        		clickCounter++;
-		        }
-		        if (clickCounter >= numOfCoords)
-		        {
-		        	clickCounter = 0;
-		        	pictureLabel.removeMouseListener(captureClicks);
-		        	endEnterMode(mainFrame, overlayPanel, pictureLabel, menuBar, controlsMenu, userMenu, enterPassBtn, endEnterModeBtn);
-		        	JOptionPane.showMessageDialog(mainFrame, "TEMPORARY - Your Password is: " + textPass, "Information", JOptionPane.INFORMATION_MESSAGE);
-		        }
-		    }
-		};
+		LoadPassword.loadPicture(filePath, mainFrame, mainPanel, overlayPanel, pictureLabel);
 		
-		pictureLabel.addMouseListener(captureClicks);
+		endEnterMode(mainFrame, overlayPanel, pictureLabel, menuBar, userMenu, userMenu, endEnterModeBtn, endEnterModeBtn);
 		
-		endEnterModeBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0)
-			{
-				pictureLabel.removeMouseListener(captureClicks);
-				endEnterMode(mainFrame, overlayPanel, pictureLabel, menuBar, controlsMenu, userMenu, enterPassBtn, endEnterModeBtn);
-			}
-		});
+		
+		if (MainGUI.getProgramMode() == Mode.DEFAULT)
+		{
+			enterPassBtn.setVisible(true);
+			
+			mainFrame.revalidate();
+			mainFrame.repaint();
+			
+			enterPassAct = new ActionListener() {
+				public void actionPerformed(ActionEvent arg0)
+				{
+					MainGUI.setProgramMode(Mode.ENTER);
+					
+					DisplayPassword.setResourcePath(3); ////////////////////////////////////TEMP//////////////////////////////////
+					
+					endEnterModeBtn.setVisible(true);
+					
+					controlsMenu.setEnabled(false);
+					userMenu.setEnabled(false);
+					enterPassBtn.setEnabled(false);
+					
+					mainFrame.revalidate();
+					mainFrame.repaint();
+					
+					String[] loadedString = new String[3];
+					loadedString = LoadPassword.loadCoordsFile(passName);
+					
+					String[] tempClickArray = new String[2];
+					
+					tempClickArray[0] = loadedString[0];
+					tempClickArray[1] = loadedString[1];
+					enterClickCoords = LoadPassword.loadCoords(tempClickArray);
+					
+					enterClickSizes = LoadPassword.loadSizes(loadedString[2]);
+					
+					int numOfCoords = countArrayCoords(enterClickCoords);
+					
+					captureClicks = new MouseAdapter(){
+						public void mouseClicked(MouseEvent e)
+					    {
+					    	int x=e.getX();
+					        int y=e.getY();
+					        
+					        if (clickCounter < numOfCoords)
+					        {
+					        	int [] correctCoords = enterClickCoords[clickCounter];
+					        	
+					        	int [] checkingCoords = new int[2];
+					        	checkingCoords[0] = x;
+					        	checkingCoords[1] = y;
+					        	
+					        	boolean correct = compareCoords(correctCoords, checkingCoords, clickCounter);
+					        	
+					        	if (!correct)
+					        	{
+					        		clickCounter = 0;
+					        		DisplayPassword.deleteCreationCircles();
+					        	}
+					        	else
+					        		clickCounter++;
+					        }
+					        if (clickCounter >= numOfCoords)
+					        {
+					        	clickCounter = 0;
+					        	endEnterMode(mainFrame, overlayPanel, pictureLabel, menuBar, controlsMenu, userMenu, enterPassBtn, endEnterModeBtn);
+					        	
+								String textPass;
+								textPass = LoadPassword.loadTextPass(passName);
+								
+					        	JOptionPane.showMessageDialog(mainFrame, "TEMPORARY - Your Password is: " + textPass, "Information", JOptionPane.INFORMATION_MESSAGE);
+					        }
+					    }
+					};		
+					
+					pictureLabel.removeMouseListener(captureClicks);
+					pictureLabel.addMouseListener(captureClicks);
+					
+					endEnterModeAct = new ActionListener() {
+						public void actionPerformed(ActionEvent arg0)
+						{
+							endEnterMode(mainFrame, overlayPanel, pictureLabel, menuBar, controlsMenu, userMenu, enterPassBtn, endEnterModeBtn);
+						}
+					};
+					
+					endEnterModeBtn.addActionListener(endEnterModeAct);
+				}
+			};
+			
+			enterPassBtn.addActionListener(enterPassAct);
+		}
 	}
 	
-	public static boolean compareCoords(int[] correctCoords, int[] checkingCoords, int size)
+	public static void resetCounter()
 	{
-		if (Math.abs(correctCoords[0] - checkingCoords[0]) <= (size/2))
-			if (Math.abs(correctCoords[1] - checkingCoords[1]) <= (size/2))
+		clickCounter = 0;
+	}
+	
+	public static boolean compareCoords(int[] correctCoords, int[] checkingCoords, int index)
+	{
+		if (Math.abs(correctCoords[0] - checkingCoords[0]) <= (enterClickSizes[index]/2))
+			if (Math.abs(correctCoords[1] - checkingCoords[1]) <= (enterClickSizes[index]/2))
 				return true;
 		return false;
 	}
 	
-	public static int[][] removeCoord(int[][] clickCoords, int index)
+	public static int[][] removeCoord(int[][] coords, int index)
 	{
-		clickCoords[index][0] = 0;
-		clickCoords[index][1] = 0;
+		coords[index][0] = 0;
+		coords[index][1] = 0;
 		
-		return clickCoords;
+		return coords = organize2DArray(coords);
 	}
 	
-	public static int[][] resetCoords(int[][] clickCoords)
+	public static int[] removeSize(int[] sizes, int index)
 	{
-		for (int i = 0; i<clickCoords.length; i++)
+		sizes[index] = 0;
+		
+		return sizes = organize1DArray(sizes);
+	}
+	
+	public static int[] organize1DArray(int[] sizes)
+	{
+		for (int i = 0; i < sizes.length - 1; i++)
 		{
-			clickCoords[i][0] = 0;
-			clickCoords[i][1] = 0;
+			if (sizes[i] == 0)
+				if (sizes[i+1] == 0)
+					return sizes;
+				else
+				{
+					sizes[i] = sizes[i+1];
+					sizes[i+1] = 0;
+				}
+		}
+		return sizes;
+	}
+	
+	public static int[][] organize2DArray(int[][] coords)
+	{
+		for (int i = 0; i < coords.length - 1; i++)
+		{
+			if (coords[i][0] == 0)
+				if (coords[i+1][0] == 0)
+					return coords;
+				else
+				{
+					coords[i][0] = coords[i+1][0];
+					coords[i][1] = coords[i+1][1];
+					coords[i+1][0] = 0;
+					coords[i+1][1] = 0;
+				}
+		}
+		return coords;
+	}
+	
+	public static int[] reset1DArray(int[] array)
+	{
+		for (int i = 0; i<array.length; i++)
+			array[i] = 0;
+		
+		return array;
+	}
+	
+	public static int[][] reset2DArray(int[][] coords)
+	{
+		for (int i = 0; i<coords.length; i++)
+		{
+			coords[i][0] = 0;
+			coords[i][1] = 0;
 		}
 		
-		return clickCoords;
+		return coords;
 	}
 	
-	public static void validateClick(int x, int y, JPanel overlayPanel, JFrame mainFrame)
+	public static void cleanActionListeners(JButton enterPassBtn, JButton endEnterModeBtn, JLabel pictureLabel)
 	{
-		if (enterMode == true)
-		DisplayPassword.displayCreationCircles(x, y, overlayPanel, mainFrame);
+		enterPassBtn = MainGUI.removeActionListeners(enterPassBtn);
+		enterPassBtn = MainGUI.removeActionListeners(endEnterModeBtn);
 	}
 	
 	public static void endEnterMode(JFrame mainFrame, JPanel overlayPanel, JLabel pictureLabel, JMenuBar menuBar,
 			JMenu controlsMenu, JMenu userMenu, JButton enterPassBtn, JButton endEnterModeBtn)
 	{
-		enterMode = false;
+		MainGUI.setProgramMode(Mode.DEFAULT);
+		
 		enterPassBtn.setEnabled(true);
 		endEnterModeBtn.setVisible(false);
 		controlsMenu.setEnabled(true);
 		userMenu.setEnabled(true);
-		DisplayPassword.deleteCreationCircles(overlayPanel, mainFrame);
+		
+		enterPassBtn = MainGUI.removeActionListeners(endEnterModeBtn);
+		pictureLabel.removeMouseListener(captureClicks);
+		
+		DisplayPassword.deleteCreationCircles();
+		
+		reset2DArray(enterClickCoords);
+		reset1DArray(enterClickSizes);
+		
+		clickCounter = 0;
+		
 		mainFrame.revalidate();
 		mainFrame.repaint();
 	}
 	
-	public static int countArrayCoords(int[][] array)
+	public static int countArrayCoords(int[][] clickCoords)
 	{
 		int number = 0;
-		for (int i = 0; i < array.length; i++)
+		
+		for (int i = 0; i < clickCoords.length; i++)
 		{
-			if (array[i][0] == 0)
-				break;
+			if (clickCoords[i][0] == 0)
+				return number;
 			else
 				number++;
 		}
 		return number;
-	}
-	
-	public static void setEnterMode(boolean state)
-	{
-		enterMode = state;
 	}
 }
