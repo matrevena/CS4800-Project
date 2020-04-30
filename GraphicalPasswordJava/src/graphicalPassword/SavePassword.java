@@ -1,4 +1,5 @@
 package graphicalPassword;
+//Main Author: Peter Giblin
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -8,7 +9,6 @@ import java.util.Base64;
 
 import javax.crypto.SecretKey;
 import javax.imageio.ImageIO;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 import org.apache.commons.io.FileUtils;
 
 public class SavePassword {
-	static void main(JFrame mainFrame, JPanel mainPanel, JPanel overlayPanel, JLabel pictureLabel, String passName, String textPass, String filePath, int [][] clickCoords)
+	static void main(JFrame mainFrame, JPanel mainPanel, JPanel overlayPanel, JLabel pictureLabel, String passName, String textPass, String filePath, int [][] clickCoords, int[] clickSizes)
 	{
 		String currentDir = System.getProperty("user.dir");
 		String encryptedFolderName = "EncryptedData";
@@ -37,7 +37,7 @@ public class SavePassword {
 		
 		saveTextPass(passName, textPass, encryptionKey, currentDir, encryptedFolderName);
 		saveEncryptionKey(passName, encryptionKey, currentDir, encryptedFolderName);
-		saveCoords(passName, clickCoords, currentDir, encryptedFolderName);
+		saveCoords(passName, clickCoords, clickSizes, currentDir, encryptedFolderName);
 	}
 	
 	static void savePic(String passName, JLabel pictureLabel, String currentDir, String filePath)
@@ -78,7 +78,7 @@ public class SavePassword {
 		}
 	}
 	
-	public static void saveCoords(String passName, int[][] clickCoords, String currentDir, String coordFolderName)
+	public static void saveCoords(String passName, int[][] clickCoords, int[] clickSizes, String currentDir, String coordFolderName)
 	{
 		File coordFolderDir = new File(currentDir + File.separator + coordFolderName);
 		
@@ -92,6 +92,7 @@ public class SavePassword {
 		String csvCoordsX = "";
 		String csvCoordsY = "";
 		
+		//Adds first 8 coordinates out of 9 to a save file format
 		for (int i = 0; i < clickCoords.length - 1; i++)
 		{
 			int tempNumX = clickCoords[i][0];
@@ -100,12 +101,24 @@ public class SavePassword {
 			int tempNumY = clickCoords[i][1];
 			csvCoordsY = csvCoordsY + tempNumY + ",";
 		}
-		
+		//Adds last number without a comma
 		int tempNumX = clickCoords[clickCoords.length - 1][0];
 		csvCoordsX = csvCoordsX + tempNumX;
 		
 		int tempNumY = clickCoords[clickCoords.length - 1][1];
 		csvCoordsY = csvCoordsY + tempNumY;
+		
+		String csvSizes = "";
+		
+		//Adds first 8 coordinates out of 9 to a save file format
+		for (int i = 0; i < clickSizes.length - 1; i++)
+		{
+			int csvSizeNum = clickSizes[i];
+			csvSizes = csvSizes + csvSizeNum + ",";
+		}
+		//Adds last number without a comma
+		int csvSizeNum = clickSizes[clickCoords.length - 1];
+		csvSizes = csvSizes + csvSizeNum;
 		
 		FileWriter coordFileWriter;
 		try {
@@ -113,6 +126,8 @@ public class SavePassword {
 			coordFileWriter.write(csvCoordsX);
 			coordFileWriter.write(" ");
 			coordFileWriter.write(csvCoordsY);
+			coordFileWriter.write(" ");
+			coordFileWriter.write(csvSizes);
 			coordFileWriter.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -153,21 +168,5 @@ public class SavePassword {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	static String fileChooser(String directory)
-	{
-		//Open Java file chooser
-		JFileChooser jFileChooser = new JFileChooser(directory);
-		int returnVal = jFileChooser.showOpenDialog(jFileChooser);
-		
-		//Checks if file is valid and set image to image label
-		if (returnVal == JFileChooser.APPROVE_OPTION)
-		{
-			String filePath = jFileChooser.getSelectedFile().getAbsolutePath(); //String from user file path input
-			return filePath;
-		}
-		
-		return null;
 	}
 }

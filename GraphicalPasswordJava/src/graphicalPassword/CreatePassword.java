@@ -1,4 +1,6 @@
 package graphicalPassword;
+//Main Author: Peter Giblin
+//Darren Suon wrote getRandomPass()
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -21,11 +23,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import graphicalPassword.MainGUI.Mode;
+
 public class CreatePassword {
-	static boolean creationMode = false;
+	static int[][] clickCoords = new int[9][2];
+	static int[] clickSizes = new int[9];
+	
 	public static void main(String directory, JFrame mainFrame, JPanel mainPanel, JPanel overlayPanel, JLabel pictureLabel, JMenuBar menuBar, JMenu controlsMenu, JMenu userMenu) //The three GUI elements that need to be resized depending on the picture
 	{	
-		String filePath = SavePassword.fileChooser(directory);
+		String filePath = MainGUI.fileChooser(directory);
 		
 		initiateEdit(filePath, mainFrame, mainPanel, overlayPanel, pictureLabel, menuBar, controlsMenu, userMenu);		
 	}
@@ -34,7 +40,7 @@ public class CreatePassword {
 	{
 		if (filePath != null)
 		{
-			creationMode = true;
+			MainGUI.setProgramMode(Mode.CREATE);
 			
 			JButton savePassBtn = new JButton("Save Graphical Password");
 			menuBar.add(savePassBtn);
@@ -66,30 +72,30 @@ public class CreatePassword {
 			
 			userCustomization(mainFrame, mainPanel, overlayPanel, pictureLabel, creationPanelR, creationPanelL, passNameTfR, textPasswordTfR, passNameTfL, textPasswordTfL);
 			
-			int[][] clickCoords = new int[9][2];
-			
 			MouseAdapter captureClicks = new MouseAdapter() {
 				public void mouseClicked(MouseEvent e)
 			    {
 			    	int x=e.getX();
 			        int y=e.getY();
 			        
-			        System.out.print("Read: ");//////////////////////////////////////////////////////////////////////////////////////////////////
 			        for (int i = 0; i<clickCoords.length; i++)
 			        {
-			        	System.out.print("[" + i + "]");//////////////////////////////////////////////////////////////////////////////////////////////////
 			        	if (clickCoords [i][0] == 0)
 			        	{
+			        		clickSizes[i] = DisplayPassword.getCircleSize();
+			        		
 			        		clickCoords[i][0] = x;
 			        		clickCoords[i][1] = y;
-			        		System.out.println("");
-			        		System.out.println("Overwrote: " + "[" + i + " = " + clickCoords[i][0] + ", " + clickCoords[i][1] + "]");//////////////////////////////////////////////////////////////////////////////////////////////////
+			        		
+			        		DisplayPassword.displayCircleNums();
+			        		
 			        		break;
 			        	}
 			        }
 			    }
 			};
 			
+			pictureLabel.removeMouseListener(captureClicks);
 			pictureLabel.addMouseListener(captureClicks);
 			
 			endCreationBtn.addActionListener(new ActionListener() {
@@ -106,6 +112,7 @@ public class CreatePassword {
 				public void actionPerformed(ActionEvent arg0)
 				{
 					int numOfCoords = ApprovePassword.countArrayCoords(clickCoords);
+					
 					if (numOfCoords >= 4)
 					{
 						if (creationPanelR.isVisible())
@@ -116,7 +123,7 @@ public class CreatePassword {
 								
 								String textPass = textPasswordTfR.getText();
 								
-								SavePassword.main(mainFrame, mainPanel, overlayPanel, pictureLabel, passName, textPass, filePath, clickCoords);
+								SavePassword.main(mainFrame, mainPanel, overlayPanel, pictureLabel, passName, textPass, filePath, clickCoords, clickSizes);
 								
 								endCreation(mainFrame, mainPanel, overlayPanel, pictureLabel, menuBar,
 										controlsMenu, userMenu, savePassBtn, endCreationBtn, creationPanelR, creationPanelL, captureClicks);
@@ -134,7 +141,7 @@ public class CreatePassword {
 								
 								String textPass = textPasswordTfL.getText();
 								
-								SavePassword.main(mainFrame, mainPanel, overlayPanel, pictureLabel, passName, textPass, filePath, clickCoords);
+								SavePassword.main(mainFrame, mainPanel, overlayPanel, pictureLabel, passName, textPass, filePath, clickCoords, clickSizes);
 								
 								endCreation(mainFrame, mainPanel, overlayPanel, pictureLabel, menuBar,
 										controlsMenu, userMenu, savePassBtn, endCreationBtn, creationPanelR, creationPanelL, captureClicks);
@@ -401,16 +408,34 @@ public class CreatePassword {
 		randomPassBtnL.addActionListener(randomPassE);
 	}
 	
-	public static void validateClick(int x, int y, JPanel overlayPanel, JFrame mainFrame)
+	public static int[][] getCoords()
 	{
-		if (creationMode == true)
-		DisplayPassword.displayCreationCircles(x, y, overlayPanel, mainFrame);
-		
+		return clickCoords;
 	}
+	
+	public static void setCoords(int[][] newCoords)
+	{
+		clickCoords = newCoords;
+	}
+	
+	public static int[] getSizes()
+	{
+		return clickSizes;
+	}
+	
+	public static void setSizes(int[] newCoords)
+	{
+		clickSizes = newCoords;
+	}
+	
 	public static void endCreation(JFrame mainFrame, JPanel mainPanel, JPanel overlayPanel, JLabel pictureLabel, JMenuBar menuBar,
 			JMenu controlsMenu, JMenu userMenu, JButton savePassBtn, JButton endCreationBtn, JPanel creationPanelR, JPanel creationPanelL, MouseAdapter captureClicks)
 	{
-		creationMode = false;
+		MainGUI.setProgramMode(Mode.DEFAULT);
+		
+		clickCoords = ApprovePassword.reset2DArray(clickCoords);
+		clickSizes = ApprovePassword.reset1DArray(clickSizes);
+		
 		menuBar.remove(savePassBtn);
 		menuBar.remove(endCreationBtn);
 		
@@ -423,7 +448,7 @@ public class CreatePassword {
 		pictureLabel.setIcon(null);
 		DisplayPassword.setResourcePath(3);
 		
-		DisplayPassword.deleteCreationCircles(overlayPanel, mainFrame);
+		DisplayPassword.deleteCreationCircles();
 		pictureLabel.removeMouseListener(captureClicks);
 		mainFrame.revalidate();
 		mainFrame.repaint();

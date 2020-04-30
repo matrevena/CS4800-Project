@@ -1,6 +1,8 @@
 package graphicalPassword;
+//Main Author: Peter Giblin
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
@@ -12,22 +14,27 @@ import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.awt.event.ActionEvent;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import java.awt.Font;
+import javax.swing.SwingConstants;
 
 public class MainGUI {
-private JFrame mainFrame; //Global declaration of the main window
+private static JFrame mainFrame = new JFrame(); //Global declaration of the main window
+private static JPanel overlayPanel = new JPanel();
+static Mode programMode;
 
 	//Main which launches the application
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MainGUI window = new MainGUI();
-					window.mainFrame.setVisible(true);
+					new MainGUI();
+					mainFrame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -35,21 +42,21 @@ private JFrame mainFrame; //Global declaration of the main window
 		});
 	}
 
-	/**
+	/*
 	 * Create the application.
 	 */
 	public MainGUI() {
 		initialize();
 	}
-
-	/**
-	 * Initialize the contents of the frame.
-	 */
+	
+	public enum Mode {DEFAULT, CREATE, ENTER};
+	
 	private void initialize() {
-		Encryption.initiateCipher();
+		programMode = Mode.DEFAULT;
+		DisplayPassword.main();
 		
+		Encryption.initiateCipher();
 		//Main window
-		mainFrame = new JFrame();
 		mainFrame.setResizable(false);
 		mainFrame.setBounds(100, 100, 1280, 762);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -84,7 +91,6 @@ private JFrame mainFrame; //Global declaration of the main window
 		userMenu.add(test);
 		
 		//The panel that holds password creation display circles
-		JPanel overlayPanel = new JPanel();
 		overlayPanel.setBorder(null);
 		overlayPanel.setBounds(0, 20, 1280, 720);
 		mainFrame.getContentPane().add(overlayPanel);
@@ -119,10 +125,8 @@ private JFrame mainFrame; //Global declaration of the main window
 		    {
 		        int x=e.getX();
 		        int y=e.getY();
-		        //System.out.println(x+","+y);			//TEST
 		        
-		        CreatePassword.validateClick(x, y, overlayPanel, mainFrame);
-		        ApprovePassword.validateClick(x, y, overlayPanel, mainFrame);
+		        DisplayPassword.validateClick(x, y, overlayPanel, mainFrame);
 		        mainFrame.revalidate();
 		        mainFrame.repaint();
 		    }
@@ -131,39 +135,7 @@ private JFrame mainFrame; //Global declaration of the main window
 		loadPassword.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0)
 			{
-				enterPassBtn.setVisible(false);
-				
-				JOptionPane.showMessageDialog(mainFrame, "Select the password you wish to load.", "Information", JOptionPane.INFORMATION_MESSAGE);
-				
-				String directory = System.getProperty("user.dir") + File.separator + "UserImages";
-				String filePath = SavePassword.fileChooser(directory);
-				
-				File loadedPic = new File(filePath);
-				String passName = loadedPic.getName().substring(0, loadedPic.getName().length() - 4);
-				
-				LoadPassword.loadPicture(filePath, mainFrame, mainPanel, overlayPanel, pictureLabel);
-				
-				String textPass = LoadPassword.loadTextPass(passName);
-				int[][] clickCoords = LoadPassword.loadCoords(passName);
-				
-				if (!enterPassBtn.isVisible())
-				{
-					enterPassBtn.setVisible(true);
-					
-					mainFrame.revalidate();
-					mainFrame.repaint();
-					
-					enterPassBtn.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent arg0)
-						{
-							DisplayPassword.setResourcePath(3);
-							ApprovePassword.setEnterMode(true);
-							endEnterModeBtn.setVisible(true);
-							ApprovePassword.initiateEnterMode(clickCoords, textPass, mainFrame, overlayPanel, pictureLabel,
-									 menuBar, controlsMenu, userMenu, enterPassBtn, endEnterModeBtn);
-						}
-					});
-				}
+				ApprovePassword.initiateEnterMode(mainFrame, overlayPanel, mainPanel, pictureLabel, menuBar, controlsMenu, userMenu, enterPassBtn, endEnterModeBtn);
 			}
 		});
 		
@@ -199,13 +171,70 @@ private JFrame mainFrame; //Global declaration of the main window
 			}
 		});
 		
+
+
+		
 		
 		test.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0)
 			{
-				Encryption.main("password12343", mainFrame, mainPanel, overlayPanel, pictureLabel);
+				
 			}
 		});
+	}
+	
+	static void setProgramMode(Mode newMode)
+	{
+			programMode = newMode;
+	}
+	
+	static Mode getProgramMode()
+	{
+		return programMode;
+	}
+	
+	static String fileChooser(String directory)
+	{
+		//Open Java file chooser
+		JFileChooser jFileChooser = new JFileChooser(directory);
+		int returnVal = jFileChooser.showOpenDialog(jFileChooser);
+		
+		//Checks if file is valid and set image to image label
+		if (returnVal == JFileChooser.APPROVE_OPTION)
+		{
+			String filePath = jFileChooser.getSelectedFile().getAbsolutePath(); //String from user file path input
+			return filePath;
+		}
+		
+		return null;
+	}
+	
+	static JFrame getMainFrame()
+	{
+		return mainFrame;
+	}
+	
+	static JPanel getOverlayPanel()
+	{
+		return overlayPanel;
+	}
+	
+	static JButton removeActionListeners(JButton button)
+	{
+		for (ActionListener actionListener : button.getActionListeners())
+		{
+			button.removeActionListener(actionListener);
+		}
+		return button;
+	}
+	
+	static JLabel removeMouseListeners(JLabel pictureLabel)
+	{
+		for (MouseListener actionListener : pictureLabel.getMouseListeners())
+		{
+			pictureLabel.removeMouseListener(actionListener);
+		}
+		return pictureLabel;
 	}
 }
 
