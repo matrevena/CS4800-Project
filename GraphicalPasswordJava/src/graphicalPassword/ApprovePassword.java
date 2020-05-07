@@ -1,6 +1,6 @@
 package graphicalPassword;
 //Main Author: Peter Giblin
-//Matthaw wrote the initial ApprovePassword class and helped design this version
+//Matthaw Trevena wrote the initial ApprovePassword class and helped design this version
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,10 +19,12 @@ import javax.swing.JPanel;
 import graphicalPassword.MainGUI.Mode;
 
 public class ApprovePassword {
+	//Global Variables
 	static int clickCounter = 0;
 	static int[][] enterClickCoords = new int[9][2];
 	static int[] enterClickSizes = new int[9];
 	
+	//Global actions listener points for creation and deletion without duplication
 	static MouseAdapter captureClicks = new MouseAdapter(){};
 	static ActionListener enterPassAct = new ActionListener(){
 		public void actionPerformed(ActionEvent e) {
@@ -31,9 +33,11 @@ public class ApprovePassword {
 		public void actionPerformed(ActionEvent e) {
 	}};
 		
-	void main()
+	void main(JFrame mainFrame, JPanel mainPanel, JPanel overlayPanel, JLabel pictureLabel,
+			JMenuBar menuBar, JMenu controlsMenu, JMenu userMenu, JButton enterPassBtn, JButton endEnterModeBtn)
 	{
-		
+		initiateEnterMode( mainFrame, mainPanel, overlayPanel, pictureLabel,
+				menuBar, controlsMenu, userMenu, enterPassBtn, endEnterModeBtn);
 	}
 	
 	public static void initiateEnterMode(JFrame mainFrame, JPanel mainPanel, JPanel overlayPanel, JLabel pictureLabel,
@@ -46,16 +50,16 @@ public class ApprovePassword {
 		String directory = System.getProperty("user.dir") + File.separator + "UserImages";
 		String filePath = MainGUI.fileChooser(directory);
 		
-		File loadedPic = new File(filePath);
-		String passName = loadedPic.getName().substring(0, loadedPic.getName().length() - 4);
-		
-		LoadPassword.loadPicture(filePath, mainFrame, mainPanel, overlayPanel, pictureLabel);
-		
 		endEnterMode(mainFrame, overlayPanel, pictureLabel, menuBar, userMenu, userMenu, endEnterModeBtn, endEnterModeBtn);
 		
-		
-		if (MainGUI.getProgramMode() == Mode.DEFAULT)
+		//Loads the chosen graphical password's picture and shows a button to start enter mode
+		if (MainGUI.getProgramMode() == Mode.DEFAULT && filePath != null)
 		{
+			File loadedPic = new File(filePath);
+			String passName = loadedPic.getName().substring(0, loadedPic.getName().length() - 4);
+			
+			LoadPassword.loadPicture(filePath, mainFrame, mainPanel, overlayPanel, pictureLabel);
+			
 			enterPassBtn.setVisible(true);
 			
 			mainFrame.revalidate();
@@ -66,7 +70,8 @@ public class ApprovePassword {
 				{
 					MainGUI.setProgramMode(Mode.ENTER);
 					
-					DisplayPassword.setResourcePath(3); ////////////////////////////////////TEMP//////////////////////////////////
+					//Default
+					DisplayPassword.setResourcePath(3);
 					
 					endEnterModeBtn.setVisible(true);
 					
@@ -81,10 +86,30 @@ public class ApprovePassword {
 					loadedString = LoadPassword.loadCoordsFile(passName);
 					
 					String[] tempClickArray = new String[2];
-					
 					tempClickArray[0] = loadedString[0];
 					tempClickArray[1] = loadedString[1];
+					
 					enterClickCoords = LoadPassword.loadCoords(tempClickArray);
+					
+					int [] savedResolution = LoadPassword.loadResolution(loadedString[3]);
+					
+					int currentWidth = MainGUI.mainFrame.getWidth();
+					int currentHeight = MainGUI.mainFrame.getHeight();
+					//Adjusts the clickCoordinates to the current resolution of the image
+					//Because the user can save a password in one resolution and load it in another
+					if (savedResolution[0] != currentWidth || savedResolution[1] != currentHeight)
+					{
+						float differenceX = (float)currentWidth/savedResolution[0];
+						float differenceY = (float)currentHeight/savedResolution[1];
+						for (int i = 0; i < enterClickCoords.length; i++)
+							if (enterClickCoords[i][0] != 0)
+							{
+								enterClickCoords[i][0] = Math.round(enterClickCoords[i][0] * differenceX);
+								enterClickCoords[i][1] = Math.round(enterClickCoords[i][1] * differenceY);
+							}
+							else
+								break;
+					}
 					
 					enterClickSizes = LoadPassword.loadSizes(loadedString[2]);
 					
@@ -106,6 +131,7 @@ public class ApprovePassword {
 					        	
 					        	boolean correct = compareCoords(correctCoords, checkingCoords, clickCounter);
 					        	
+					        	//If a single click is wrong the user has to restart
 					        	if (!correct)
 					        	{
 					        		clickCounter = 0;
@@ -127,6 +153,7 @@ public class ApprovePassword {
 					    }
 					};		
 					
+					//Done to prevent duplicate mouse listeners
 					pictureLabel.removeMouseListener(captureClicks);
 					pictureLabel.addMouseListener(captureClicks);
 					
@@ -175,6 +202,7 @@ public class ApprovePassword {
 	
 	public static int[] organize1DArray(int[] sizes)
 	{
+		//Finds and removes empty indexes
 		for (int i = 0; i < sizes.length - 1; i++)
 		{
 			if (sizes[i] == 0)
@@ -191,6 +219,7 @@ public class ApprovePassword {
 	
 	public static int[][] organize2DArray(int[][] coords)
 	{
+		//Finds and removes empty indexes
 		for (int i = 0; i < coords.length - 1; i++)
 		{
 			if (coords[i][0] == 0)
@@ -260,6 +289,7 @@ public class ApprovePassword {
 	{
 		int number = 0;
 		
+		//Counts until an empty index is found
 		for (int i = 0; i < clickCoords.length; i++)
 		{
 			if (clickCoords[i][0] == 0)

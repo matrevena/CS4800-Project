@@ -26,10 +26,12 @@ import javax.swing.JTextField;
 import graphicalPassword.MainGUI.Mode;
 
 public class CreatePassword {
+	//Array saves the x and y coords of the user's chosen click locations click
 	static int[][] clickCoords = new int[9][2];
+	//Array saves the size of each of user's chosen click circles click
 	static int[] clickSizes = new int[9];
 	
-	public static void main(String directory, JFrame mainFrame, JPanel mainPanel, JPanel overlayPanel, JLabel pictureLabel, JMenuBar menuBar, JMenu controlsMenu, JMenu userMenu) //The three GUI elements that need to be resized depending on the picture
+	public static void main(String directory, JFrame mainFrame, JPanel mainPanel, JPanel overlayPanel, JLabel pictureLabel, JMenuBar menuBar, JMenu controlsMenu, JMenu userMenu)
 	{	
 		String filePath = MainGUI.fileChooser(directory);
 		
@@ -43,11 +45,14 @@ public class CreatePassword {
 			MainGUI.setProgramMode(Mode.CREATE);
 			
 			JButton savePassBtn = new JButton("Save Graphical Password");
+			savePassBtn.setFont(new Font("Segoe UI", Font.BOLD, 14));
 			menuBar.add(savePassBtn);
 			
 			JButton endCreationBtn = new JButton("End Password Creation");
+			endCreationBtn.setFont(new Font("Segoe UI", Font.BOLD, 14));
 			menuBar.add(endCreationBtn);
 			
+			//Disables some tool bar options during creation
 			controlsMenu.setEnabled(false);
 			userMenu.setEnabled(false);
 			
@@ -65,12 +70,14 @@ public class CreatePassword {
 			JTextField passNameTfL = new JTextField();
 			
 			File loadedPic = new File(filePath);
+			//Sets the name of the uploaded image as the graphical password name (can be changed by the user)
 			passNameTfR.setText(loadedPic.getName().substring(0, loadedPic.getName().length() - 4));
 			passNameTfL.setText(loadedPic.getName().substring(0, loadedPic.getName().length() - 4));
 			
 			LoadPassword.loadPicture(filePath, mainFrame, mainPanel, overlayPanel, pictureLabel);
 			
-			userCustomization(mainFrame, mainPanel, overlayPanel, pictureLabel, creationPanelR, creationPanelL, passNameTfR, textPasswordTfR, passNameTfL, textPasswordTfL);
+			//The side menus which have options for the user during password creation
+			customizationMenu(mainFrame, mainPanel, overlayPanel, pictureLabel, creationPanelR, creationPanelL, passNameTfR, textPasswordTfR, passNameTfL, textPasswordTfL);
 			
 			MouseAdapter captureClicks = new MouseAdapter() {
 				public void mouseClicked(MouseEvent e)
@@ -78,10 +85,12 @@ public class CreatePassword {
 			    	int x=e.getX();
 			        int y=e.getY();
 			        
+			        //Loops through the clickCoords array checking for empty spots
 			        for (int i = 0; i<clickCoords.length; i++)
 			        {
 			        	if (clickCoords [i][0] == 0)
 			        	{
+			        		//Saves the size of each click
 			        		clickSizes[i] = DisplayPassword.getCircleSize();
 			        		
 			        		clickCoords[i][0] = x;
@@ -95,6 +104,7 @@ public class CreatePassword {
 			    }
 			};
 			
+			//Done to prevent duplicate mouse listeners
 			pictureLabel.removeMouseListener(captureClicks);
 			pictureLabel.addMouseListener(captureClicks);
 			
@@ -106,49 +116,65 @@ public class CreatePassword {
 				}
 			});
 			
-			
-			
 			savePassBtn.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0)
 				{
 					int numOfCoords = ApprovePassword.countArrayCoords(clickCoords);
 					
+					//The user must select at least 4 click areas for their graphical password combo
 					if (numOfCoords >= 4)
 					{
+						//Check which creation options menu is currently visible
 						if (creationPanelR.isVisible())
 						{
-							if (passNameTfR.getText().length() >= 4 && passNameTfR.getText().length() <= 20)
+							//Only allows password names of 4 to 20 and text passwords of 8 to 20
+							String passName = passNameTfR.getText();
+							if (passName.length() >= 4 && passName.length() <= 20)
 							{
-								String passName = passNameTfR.getText();
-								
 								String textPass = textPasswordTfR.getText();
-								
-								SavePassword.main(mainFrame, mainPanel, overlayPanel, pictureLabel, passName, textPass, filePath, clickCoords, clickSizes);
-								
-								endCreation(mainFrame, mainPanel, overlayPanel, pictureLabel, menuBar,
-										controlsMenu, userMenu, savePassBtn, endCreationBtn, creationPanelR, creationPanelL, captureClicks);
+								if (textPass.length() >= 8 && textPass.length() <= 20)
+								{
+									SavePassword.main(mainFrame, mainPanel, overlayPanel, pictureLabel, passName, textPass, filePath, clickCoords, clickSizes);
+									
+									endCreation(mainFrame, mainPanel, overlayPanel, pictureLabel, menuBar,
+											controlsMenu, userMenu, savePassBtn, endCreationBtn, creationPanelR, creationPanelL, captureClicks);
+								}
+								else
+								{
+									JOptionPane.showMessageDialog(mainFrame, "Your text password must be 8 to 20 characters long.",
+											"Graphical Password Name Required", JOptionPane.ERROR_MESSAGE);
+								}
 							}
 							else
 							{
-								JOptionPane.showMessageDialog(mainFrame, "Please enter a name for your graphical password that is 4 to 20 letter and numbers long.", "Graphical Password Name Required", JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(mainFrame, "Please enter a name for your graphical password that is 4 to 20 letter and numbers long.",
+										"Graphical Password Name Required", JOptionPane.ERROR_MESSAGE);
 							}
 						}
 						else if (creationPanelL.isVisible())
 						{
-							if (passNameTfL.getText().length() >= 4 && passNameTfL.getText().length() <= 20)
+							//Only allows password names of 4 to 20 and text passwords of 8 to 20
+							String passName = passNameTfL.getText();
+							if (passName.length() >= 4 && passName.length() <= 20)
 							{
-								String passName = passNameTfL.getText();
-								
 								String textPass = textPasswordTfL.getText();
-								
-								SavePassword.main(mainFrame, mainPanel, overlayPanel, pictureLabel, passName, textPass, filePath, clickCoords, clickSizes);
-								
-								endCreation(mainFrame, mainPanel, overlayPanel, pictureLabel, menuBar,
-										controlsMenu, userMenu, savePassBtn, endCreationBtn, creationPanelR, creationPanelL, captureClicks);
+								if (textPass.length() >= 8 && textPass.length() <= 20)
+								{
+									SavePassword.main(mainFrame, mainPanel, overlayPanel, pictureLabel, passName, textPass, filePath, clickCoords, clickSizes);
+									
+									endCreation(mainFrame, mainPanel, overlayPanel, pictureLabel, menuBar,
+											controlsMenu, userMenu, savePassBtn, endCreationBtn, creationPanelR, creationPanelL, captureClicks);
+								}
+								else
+								{
+									JOptionPane.showMessageDialog(mainFrame, "Your text password must be 8 to 20 characters long.",
+											"Graphical Password Name Required", JOptionPane.ERROR_MESSAGE);
+								}
 							}
 							else
 							{
-								JOptionPane.showMessageDialog(mainFrame, "Please enter a name for your graphical password that is 4 to 20 letter and numbers long.", "Graphical Password Name Required", JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(mainFrame, "Please enter a name for your graphical password that is 4 to 20 letter and numbers long.",
+										"Graphical Password Name Required", JOptionPane.ERROR_MESSAGE);
 							}
 						}
 					}
@@ -159,23 +185,25 @@ public class CreatePassword {
 		}
 	}
 	
-	public static void userCustomization(JFrame mainFrame, JPanel mainPanel, JPanel overlayPanel, JLabel pictureLabel, JPanel creationPanelR, JPanel creationPanelL, JTextField passNameTfR, JTextField textPasswordTfR, JTextField passNameTfL, JTextField textPasswordTfL)
+	public static void customizationMenu(JFrame mainFrame, JPanel mainPanel, JPanel overlayPanel, JLabel pictureLabel, JPanel creationPanelR,
+			JPanel creationPanelL, JTextField passNameTfR, JTextField textPasswordTfR, JTextField passNameTfL, JTextField textPasswordTfL)
 	{	
+		//The side menus which have options for the user during password creation
+		int menuWidth = 420;
+		int menuHeight = 120;
+		int x = mainFrame.getWidth() - menuWidth;
+		int y = 0;
+		creationPanelR.setBounds(x, y, menuWidth, menuHeight);
+		creationPanelL.setBounds(0, y, menuWidth, menuHeight);
+		
 		creationPanelR.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
 		creationPanelL.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
 		
 		creationPanelR.setVisible(true);
 		creationPanelL.setVisible(false);
 		
-		int width = 420;
-		int height = 100;
-		int x = mainFrame.getWidth()-width;
-		int y = 1;
-		creationPanelR.setBounds(x, y, width, height);
-		creationPanelL.setBounds(-6, y, width, height);
-		
 		double sideBtnSize = .10;
-		double sizeRatio = ((.99 - sideBtnSize)/4);
+		double sizeRatio = ((1 - sideBtnSize)/4);
 		
 		//Right Options Menu Elements
 		JButton swapSideBtnR = new JButton("<");
@@ -183,6 +211,7 @@ public class CreatePassword {
 		swapSideBtnR.setPreferredSize(new Dimension((int)(creationPanelR.getWidth()*sideBtnSize), (creationPanelR.getHeight())));
 		creationPanelR.add(swapSideBtnR);
 		
+		//Nested panel are used for formatting
 		JPanel nestedPanelR1 = new JPanel();
 		nestedPanelR1.setLayout(new BoxLayout(nestedPanelR1, BoxLayout.Y_AXIS));
 		creationPanelR.add(nestedPanelR1);
@@ -211,10 +240,11 @@ public class CreatePassword {
 		sizeOption3BtnR.setIcon(new ImageIcon(MainGUI.class.getResource("/passCreationCircle40x40.png")));
 		nestedPanelR2.add(sizeOption3BtnR);
 		
-		JButton resetClicksBtnR = new JButton();
-		resetClicksBtnR.setBorder(null);
-		resetClicksBtnR.setPreferredSize(new Dimension((int)(creationPanelR.getWidth()*sizeRatio), (int)(creationPanelR.getHeight()*.5)));
-		nestedPanelR2.add(resetClicksBtnR);
+		JButton sizeOption4BtnR = new JButton();
+		sizeOption4BtnR.setBorder(null);
+		sizeOption4BtnR.setPreferredSize(new Dimension((int)(creationPanelR.getWidth()*sizeRatio), (int)(creationPanelR.getHeight()*.5)));
+		sizeOption4BtnR.setIcon(new ImageIcon(MainGUI.class.getResource("/passCreationCircle50x50.png")));
+		nestedPanelR2.add(sizeOption4BtnR);
 		
 		JButton randomPassBtnR = new JButton();
 		randomPassBtnR.setBorder(null);
@@ -247,6 +277,7 @@ public class CreatePassword {
 		nestedPanelR6.add(passNameTfR);
 		
 		//Left Options Menu Elements
+		//Nested panel are used for formatting
 		JPanel nestedPanelL1 = new JPanel();
 		nestedPanelL1.setLayout(new BoxLayout(nestedPanelL1, BoxLayout.Y_AXIS));
 		creationPanelL.add(nestedPanelL1);
@@ -275,10 +306,11 @@ public class CreatePassword {
 		sizeOption3BtnL.setIcon(new ImageIcon(MainGUI.class.getResource("/passCreationCircle40x40.png")));
 		nestedPanelL2.add(sizeOption3BtnL);
 		
-		JButton resetClicksBtnL = new JButton();
-		resetClicksBtnL.setBorder(null);
-		resetClicksBtnL.setPreferredSize(new Dimension((int)(creationPanelL.getWidth()*sizeRatio), (int)(creationPanelL.getHeight()*.5)));
-		nestedPanelL2.add(resetClicksBtnL);
+		JButton sizeOption4BtnL = new JButton();
+		sizeOption4BtnL.setBorder(null);
+		sizeOption4BtnL.setPreferredSize(new Dimension((int)(creationPanelR.getWidth()*sizeRatio), (int)(creationPanelR.getHeight()*.5)));
+		sizeOption4BtnL.setIcon(new ImageIcon(MainGUI.class.getResource("/passCreationCircle50x50.png")));
+		nestedPanelL2.add(sizeOption4BtnL);
 		
 		JButton randomPassBtnL = new JButton();
 		randomPassBtnL.setBorder(null);
@@ -315,6 +347,10 @@ public class CreatePassword {
 		swapSideBtnL.setPreferredSize(new Dimension((int)(creationPanelL.getWidth()*sideBtnSize), (creationPanelL.getHeight())));
 		creationPanelL.add(swapSideBtnL);
 		
+		//Default button is show as selected
+		sizeOption3BtnR.setEnabled(false);
+		sizeOption3BtnL.setEnabled(false);
+		
 		creationPanelL.setVisible(false);
 		
 		mainFrame.revalidate();
@@ -323,6 +359,14 @@ public class CreatePassword {
 		ActionListener size1BtnEvent = new ActionListener() {
 			public void actionPerformed(ActionEvent arg0)
 			{
+				sizeOption1BtnR.setEnabled(false);
+				sizeOption1BtnL.setEnabled(false);
+				sizeOption2BtnR.setEnabled(true);
+				sizeOption2BtnL.setEnabled(true);
+				sizeOption3BtnR.setEnabled(true);
+				sizeOption3BtnL.setEnabled(true);
+				sizeOption4BtnR.setEnabled(true);
+				sizeOption4BtnL.setEnabled(true);
 				DisplayPassword.setResourcePath(1);
 			}
 		};
@@ -330,6 +374,14 @@ public class CreatePassword {
 		ActionListener size2BtnEvent = new ActionListener() {
 			public void actionPerformed(ActionEvent arg0)
 			{
+				sizeOption1BtnR.setEnabled(true);
+				sizeOption1BtnL.setEnabled(true);
+				sizeOption2BtnR.setEnabled(false);
+				sizeOption2BtnL.setEnabled(false);
+				sizeOption3BtnR.setEnabled(true);
+				sizeOption3BtnL.setEnabled(true);
+				sizeOption4BtnR.setEnabled(true);
+				sizeOption4BtnL.setEnabled(true);
 				DisplayPassword.setResourcePath(2);
 			}
 		};
@@ -337,7 +389,30 @@ public class CreatePassword {
 		ActionListener size3BtnEvent = new ActionListener() {
 			public void actionPerformed(ActionEvent arg0)
 			{
+				sizeOption1BtnR.setEnabled(true);
+				sizeOption1BtnL.setEnabled(true);
+				sizeOption2BtnR.setEnabled(true);
+				sizeOption2BtnL.setEnabled(true);
+				sizeOption3BtnR.setEnabled(false);
+				sizeOption3BtnL.setEnabled(false);
+				sizeOption4BtnR.setEnabled(true);
+				sizeOption4BtnL.setEnabled(true);
 				DisplayPassword.setResourcePath(3);
+			}
+		};
+		
+		ActionListener size4BtnEvent = new ActionListener() {
+			public void actionPerformed(ActionEvent arg0)
+			{
+				sizeOption1BtnR.setEnabled(true);
+				sizeOption1BtnL.setEnabled(true);
+				sizeOption2BtnR.setEnabled(true);
+				sizeOption2BtnL.setEnabled(true);
+				sizeOption3BtnR.setEnabled(true);
+				sizeOption3BtnL.setEnabled(true);
+				sizeOption4BtnR.setEnabled(false);
+				sizeOption4BtnL.setEnabled(false);
+				DisplayPassword.setResourcePath(4);
 			}
 		};
 		
@@ -347,7 +422,10 @@ public class CreatePassword {
 		sizeOption2BtnL.addActionListener(size2BtnEvent);
 		sizeOption3BtnR.addActionListener(size3BtnEvent);
 		sizeOption3BtnL.addActionListener(size3BtnEvent);
+		sizeOption4BtnR.addActionListener(size4BtnEvent);
+		sizeOption4BtnL.addActionListener(size4BtnEvent);
 		
+		//Hides the right side and displays the left side
 		swapSideBtnR.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0)
 			{
@@ -362,6 +440,7 @@ public class CreatePassword {
 			}
 		});
 		
+		//Hides the left side and displays the right side
 		swapSideBtnL.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0)
 			{
@@ -376,6 +455,8 @@ public class CreatePassword {
 			}
 		});
 		
+		//If the random password button is pressed for the first time it clears the random pass and lets the user enter their own text pass
+		//On the second click it regenerates a new random pass and disables the text box again
 		ActionListener randomPassE = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (textPasswordTfR.isEnabled() == false)

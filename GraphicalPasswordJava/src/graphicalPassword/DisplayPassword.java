@@ -7,7 +7,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -16,13 +15,16 @@ import javax.swing.SwingConstants;
 import graphicalPassword.MainGUI.Mode;
 
 public class DisplayPassword {
-	static JFrame mainFrame = MainGUI.getMainFrame();
+	static JFrame mainFrame = MainGUI.mainFrame;
 	static JPanel overlayPanel = MainGUI.getOverlayPanel();
 	
+	//Array that is used to store which visible circles corresponds to which click coordinate
+	//The user is able to delete circles in the middle of their combination
+	//So this array was made to have each visible circle point to the proper coordinate
 	static int[] circleCounter = new int[9];
 	
+	//Objects which are generated and hidden when the user changes their click combination during creation and approval
 	static JLabel circleLabel0 = new JLabel("");
-	
 	static JLabel circleLabel1 = new JLabel("");
 	static JLabel circleLabel2 = new JLabel("");
 	static JLabel circleLabel3 = new JLabel("");
@@ -31,6 +33,7 @@ public class DisplayPassword {
 	static JLabel circleLabel6 = new JLabel("");
 	static JLabel circleLabel7 = new JLabel("");
 	static JLabel circleLabel8 = new JLabel("");
+	
 	static JLabel numLabel1 = new JLabel("1");
 	static JLabel numLabel2 = new JLabel("2");
 	static JLabel numLabel3 = new JLabel("3");
@@ -40,6 +43,8 @@ public class DisplayPassword {
 	static JLabel numLabel7 = new JLabel("7");
 	static JLabel numLabel8 = new JLabel("8");
 	static JLabel numLabel9 = new JLabel("9");
+	
+	//Defaults click size the size 3 of 4
 	static String resourcePath = "/passCreationCircle40x40.png";
 	public static void main()
 	{
@@ -97,6 +102,8 @@ public class DisplayPassword {
 		numLabel9.setHorizontalAlignment(SwingConstants.CENTER);
 		numLabel9.setFont(new Font("Tahoma", Font.BOLD, 20));
 		numLabel9.setForeground(Color.white);
+		
+		//When circles are clicked they delete themselves
 		circleLabel0.addMouseListener(new MouseAdapter() { public void mouseClicked(MouseEvent e) {circleLabel0.setVisible(false);deleteCircle(circleCounter[0], 0);}});
 		circleLabel1.addMouseListener(new MouseAdapter() { public void mouseClicked(MouseEvent e) {circleLabel1.setVisible(false);deleteCircle(circleCounter[1], 1);}});
 		circleLabel2.addMouseListener(new MouseAdapter() { public void mouseClicked(MouseEvent e) {circleLabel2.setVisible(false);deleteCircle(circleCounter[2], 2);}});
@@ -110,7 +117,10 @@ public class DisplayPassword {
 	
 	public static void displayCreationCircles(int x, int y)
 	{
+		//Initializing a counter
 		int currentCircle = 9;
+		
+		//Loops through counter array to find first empty index
 		for (int i = 0; i < circleCounter.length; i++)
 			if (circleCounter[i] == 0)
 			{
@@ -237,11 +247,6 @@ public class DisplayPassword {
 	
 	public static void deleteCircle(int coordIndex, int counterIndex)
 	{
-		System.out.println("CircleCounter: ");
-		for (int i = 0; i < circleCounter.length; i++)
-			System.out.print("["+ circleCounter[i] + "]");
-		System.out.println("");
-		
 		if (MainGUI.getProgramMode() == Mode.CREATE)
 		{
 			deleteCreationNums();

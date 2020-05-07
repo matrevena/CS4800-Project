@@ -21,9 +21,12 @@ import javax.swing.JPanel;
 import org.apache.commons.io.FileUtils;
 
 public class LoadPassword {
-	void main()
+	void main(String passName, String filePath, JFrame mainFrame, JPanel mainPanel, JPanel overlayPanel, JLabel pictureLabel)
 	{
-		//TODO construct main
+		loadPicture(filePath, mainFrame, mainPanel, overlayPanel, pictureLabel);
+		loadTextPass(passName);
+		String[] coordsFile = loadCoordsFile(passName);
+		loadCoords(coordsFile);
 	}
 	
 	static void loadPicture(String filePath, JFrame mainFrame, JPanel mainPanel, JPanel overlayPanel, JLabel pictureLabel)
@@ -41,28 +44,15 @@ public class LoadPassword {
 		Image img = scalePicture(pic, mainFrame, mainPanel, overlayPanel, pictureLabel);
 		
 		pictureLabel.setIcon(new ImageIcon(img));
-		
-		//Temp
-		DisplayPassword.resetCounter();/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		DisplayPassword.resetCounter();
 	}
 	
 	public static Image scalePicture(BufferedImage pic, JFrame mainFrame, JPanel mainPanel, JPanel overlayPanel, JLabel pictureLabel)
 	{
-		//TODO Add aspect ratio option
-		//Scales the size of the uploaded image
-		
-		//Other possible method
-		//pic = new BufferedImage(1280, 720, BufferedImage.TYPE_INT_ARGB);
-		
-		Image img = pic.getScaledInstance(1280, 720, Image.SCALE_SMOOTH);
+		Image img = pic.getScaledInstance(mainFrame.getWidth(), mainFrame.getHeight(), Image.SCALE_SMOOTH);
 		
 		return img;
-		
-		/* Properties that need to adjusted depending on the image size, will also need to implement a cap on size and make images scale down
-		mainFrame.setBounds(100, 100, 1298, 780);
-		mainPanel.setBounds(0, 20, 1280, 720);
-		pictureLabel.setBounds(0, 20, 1280, 720);
-		*/
 	}
 	
 	static String loadTextPass(String passName)
@@ -180,6 +170,21 @@ public class LoadPassword {
 		return clickSizes;
 	}
 	
+	public static int[] loadResolution(String original)
+	{
+		int[] resolution = new int[2];
+		
+		String[] splitRes = original.split(",");
+		
+		for (int i = 0; i < splitRes.length; i++)
+		{
+			int tempRes = Integer.valueOf(splitRes[i]);
+			resolution[i] = tempRes;
+		}
+		
+		return resolution;
+	}
+	
 	public static void deleteAll(JFrame mainFrame)
 	{
 		String encryptedFolderName = "EncryptedData";
@@ -189,13 +194,17 @@ public class LoadPassword {
 		String encryptedFilePath = (currentDir + File.separator + encryptedFolderName);
 		String picFilePath = (currentDir + File.separator + picFolderName);
 		String chosenPassFilePath = MainGUI.fileChooser(picFilePath);
-;		File loadedPic = new File(chosenPassFilePath);
-		String passName = loadedPic.getName().substring(0, loadedPic.getName().length() - 4);
 		
-		deletePic(passName, picFilePath, mainFrame);
-		deleteTextPass(passName, encryptedFilePath, mainFrame);
-		deleteCoords(passName, encryptedFilePath, mainFrame);
-		deleteEncryptionKey(passName, encryptedFilePath, mainFrame);
+		if (chosenPassFilePath != null)
+		{
+			File loadedPic = new File(chosenPassFilePath);
+			String passName = loadedPic.getName().substring(0, loadedPic.getName().length() - 4);
+			
+			deletePic(passName, picFilePath, mainFrame);
+			deleteTextPass(passName, encryptedFilePath, mainFrame);
+			deleteCoords(passName, encryptedFilePath, mainFrame);
+			deleteEncryptionKey(passName, encryptedFilePath, mainFrame);
+		}
 	}
 
 	public static void deletePic(String passName, String filePath, JFrame mainFrame)
