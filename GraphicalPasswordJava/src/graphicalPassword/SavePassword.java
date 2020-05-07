@@ -21,16 +21,6 @@ public class SavePassword {
 		String currentDir = System.getProperty("user.dir");
 		String encryptedFolderName = "EncryptedData";
 		
-		// Will be used to detect and eventually read a config file
-		/*
-		File config = new File(currentDir + File.separator + "config.txt");
-
-		if (config.exists() == true)
-		{
-			JOptionPane.showMessageDialog(mainFrame, "Here:" + currentDir, "Information:", JOptionPane.INFORMATION_MESSAGE);
-		}
-		*/
-		
 		savePic(passName, pictureLabel, currentDir, filePath);
 		
 		SecretKey encryptionKey = Encryption.generateKey("AES");
@@ -53,11 +43,6 @@ public class SavePassword {
 		
 		File picSaveDir = new File(currentDir + File.separator + picFolderName + File.separator + passName + "." + picExtension);
 		
-		//Giving Error
-		//ImageIcon icon = (ImageIcon)pictureLabel.getIcon();
-		//BufferedImage pic = (BufferedImage)(icon.getImage());
-		
-		//temp
 		BufferedImage pic = null;
 		try
 		{
@@ -120,6 +105,9 @@ public class SavePassword {
 		int csvSizeNum = clickSizes[clickCoords.length - 1];
 		csvSizes = csvSizes + csvSizeNum;
 		
+		int windowWidth = MainGUI.mainFrame.getWidth();
+		int windowHeight = MainGUI.mainFrame.getHeight();
+		
 		FileWriter coordFileWriter;
 		try {
 			coordFileWriter = new FileWriter(textPassSaveDir);
@@ -128,6 +116,8 @@ public class SavePassword {
 			coordFileWriter.write(csvCoordsY);
 			coordFileWriter.write(" ");
 			coordFileWriter.write(csvSizes);
+			coordFileWriter.write(" ");
+			coordFileWriter.write(windowWidth + "," + windowHeight);
 			coordFileWriter.close();
 		} catch (IOException e) {
 			e.printStackTrace();
