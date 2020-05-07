@@ -36,7 +36,7 @@ public class MainGUI {
 static JFrame mainFrame = new JFrame(); //Global declaration of the main window
 private static JPanel overlayPanel = new JPanel();
 
-//Enum to track which mode the program 
+//Enum to track which mode the program is in
 static Mode programMode;
 
 //---Object Properties---
