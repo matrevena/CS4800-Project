@@ -3,6 +3,7 @@ package graphicalPassword;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Base64;
@@ -12,8 +13,6 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
-import org.apache.commons.io.FileUtils;
 
 public class SavePassword {
 	static void main(JFrame mainFrame, JPanel mainPanel, JPanel overlayPanel, JLabel pictureLabel, String passName, String textPass, String filePath, int [][] clickCoords, int[] clickSizes)
@@ -72,7 +71,7 @@ public class SavePassword {
 			coordFolderDir.mkdir();
 		}
 		
-		File textPassSaveDir = new File(currentDir + File.separator + coordFolderName + File.separator + passName + "_Coords" + ".txt");
+		File coordsSaveDir = new File(currentDir + File.separator + coordFolderName + File.separator + passName + "_Coords" + ".txt");
 		
 		String csvCoordsX = "";
 		String csvCoordsY = "";
@@ -110,7 +109,7 @@ public class SavePassword {
 		
 		FileWriter coordFileWriter;
 		try {
-			coordFileWriter = new FileWriter(textPassSaveDir);
+			coordFileWriter = new FileWriter(coordsSaveDir);
 			coordFileWriter.write(csvCoordsX);
 			coordFileWriter.write(" ");
 			coordFileWriter.write(csvCoordsY);
@@ -137,9 +136,14 @@ public class SavePassword {
 		
 		byte[] encryptedData = Encryption.encryptString(textPass, encryptionKey);
 		
-		try {
-			FileUtils.writeByteArrayToFile(textPassSaveDir, encryptedData);
-		} catch (IOException e) {
+		try
+		{
+			FileOutputStream coordOutputStream = new FileOutputStream(textPassSaveDir);
+			coordOutputStream.write(encryptedData);
+			coordOutputStream.close();
+		}
+		catch (IOException e)
+		{
 			e.printStackTrace();
 		}
 	}
