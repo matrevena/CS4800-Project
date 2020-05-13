@@ -18,21 +18,21 @@ public class DisplayPassword {
 	static JFrame mainFrame = MainGUI.mainFrame;
 	static JPanel overlayPanel = MainGUI.getOverlayPanel();
 	
-	//Array that is used to store which visible circles corresponds to which click coordinate
-	//The user is able to delete circles in the middle of their combination
-	//So this array was made to have each visible circle point to the proper coordinate
-	static int[] circleCounter = new int[9];
+	//Array that is used to store which visible shapes corresponds to which click coordinate
+	//The user is able to delete shapes in the middle of their combination
+	//So this array was made to have each visible shape point to the proper coordinate
+	static int[] clickCounter = new int[9];
 	
 	//Objects which are generated and hidden when the user changes their click combination during creation and approval
-	static JLabel circleLabel0 = new JLabel("");
-	static JLabel circleLabel1 = new JLabel("");
-	static JLabel circleLabel2 = new JLabel("");
-	static JLabel circleLabel3 = new JLabel("");
-	static JLabel circleLabel4 = new JLabel("");
-	static JLabel circleLabel5 = new JLabel("");
-	static JLabel circleLabel6 = new JLabel("");
-	static JLabel circleLabel7 = new JLabel("");
-	static JLabel circleLabel8 = new JLabel("");
+	static JLabel shapeLabel0 = new JLabel("");
+	static JLabel shapeLabel1 = new JLabel("");
+	static JLabel shapeLabel2 = new JLabel("");
+	static JLabel shapeLabel3 = new JLabel("");
+	static JLabel shapeLabel4 = new JLabel("");
+	static JLabel shapeLabel5 = new JLabel("");
+	static JLabel shapeLabel6 = new JLabel("");
+	static JLabel shapeLabel7 = new JLabel("");
+	static JLabel shapeLabel8 = new JLabel("");
 	
 	static JLabel numLabel1 = new JLabel("1");
 	static JLabel numLabel2 = new JLabel("2");
@@ -45,27 +45,27 @@ public class DisplayPassword {
 	static JLabel numLabel9 = new JLabel("9");
 	
 	//Defaults click size the size 3 of 4
-	static String resourcePath = "/passCreationCircle40x40.png";
+	static String resourcePath = "/passCreationSquare40x40.png";
 	public static void main()
 	{
-		overlayPanel.add(circleLabel0);
-		overlayPanel.add(circleLabel1);
-		overlayPanel.add(circleLabel2);
-		overlayPanel.add(circleLabel3);
-		overlayPanel.add(circleLabel4);
-		overlayPanel.add(circleLabel5);
-		overlayPanel.add(circleLabel6);
-		overlayPanel.add(circleLabel7);
-		overlayPanel.add(circleLabel8);
-		circleLabel0.setVisible(true);
-		circleLabel1.setVisible(true);
-		circleLabel2.setVisible(true);
-		circleLabel3.setVisible(true);
-		circleLabel4.setVisible(true);
-		circleLabel5.setVisible(true);
-		circleLabel6.setVisible(true);
-		circleLabel7.setVisible(true);
-		circleLabel8.setVisible(true);
+		overlayPanel.add(shapeLabel0);
+		overlayPanel.add(shapeLabel1);
+		overlayPanel.add(shapeLabel2);
+		overlayPanel.add(shapeLabel3);
+		overlayPanel.add(shapeLabel4);
+		overlayPanel.add(shapeLabel5);
+		overlayPanel.add(shapeLabel6);
+		overlayPanel.add(shapeLabel7);
+		overlayPanel.add(shapeLabel8);
+		shapeLabel0.setVisible(true);
+		shapeLabel1.setVisible(true);
+		shapeLabel2.setVisible(true);
+		shapeLabel3.setVisible(true);
+		shapeLabel4.setVisible(true);
+		shapeLabel5.setVisible(true);
+		shapeLabel6.setVisible(true);
+		shapeLabel7.setVisible(true);
+		shapeLabel8.setVisible(true);
 		overlayPanel.add(numLabel1);
 		overlayPanel.add(numLabel2);
 		overlayPanel.add(numLabel3);
@@ -103,97 +103,97 @@ public class DisplayPassword {
 		numLabel9.setFont(new Font("Tahoma", Font.BOLD, 20));
 		numLabel9.setForeground(Color.white);
 		
-		//When circles are clicked they delete themselves
-		circleLabel0.addMouseListener(new MouseAdapter() { public void mouseClicked(MouseEvent e) {circleLabel0.setVisible(false);deleteCircle(circleCounter[0], 0);}});
-		circleLabel1.addMouseListener(new MouseAdapter() { public void mouseClicked(MouseEvent e) {circleLabel1.setVisible(false);deleteCircle(circleCounter[1], 1);}});
-		circleLabel2.addMouseListener(new MouseAdapter() { public void mouseClicked(MouseEvent e) {circleLabel2.setVisible(false);deleteCircle(circleCounter[2], 2);}});
-		circleLabel3.addMouseListener(new MouseAdapter() { public void mouseClicked(MouseEvent e) {circleLabel3.setVisible(false);deleteCircle(circleCounter[3], 3);}});
-		circleLabel4.addMouseListener(new MouseAdapter() { public void mouseClicked(MouseEvent e) {circleLabel4.setVisible(false);deleteCircle(circleCounter[4], 4);}});
-		circleLabel5.addMouseListener(new MouseAdapter() { public void mouseClicked(MouseEvent e) {circleLabel5.setVisible(false);deleteCircle(circleCounter[5], 5);}});
-		circleLabel6.addMouseListener(new MouseAdapter() { public void mouseClicked(MouseEvent e) {circleLabel6.setVisible(false);deleteCircle(circleCounter[6], 6);}});
-		circleLabel7.addMouseListener(new MouseAdapter() { public void mouseClicked(MouseEvent e) {circleLabel7.setVisible(false);deleteCircle(circleCounter[7], 7);}});
-		circleLabel8.addMouseListener(new MouseAdapter() { public void mouseClicked(MouseEvent e) {circleLabel8.setVisible(false);deleteCircle(circleCounter[8], 8);}}); 
+		//When shapes are clicked they delete themselves
+		shapeLabel0.addMouseListener(new MouseAdapter() { public void mouseClicked(MouseEvent e) {shapeLabel0.setVisible(false);deleteShape(clickCounter[0], 0);}});
+		shapeLabel1.addMouseListener(new MouseAdapter() { public void mouseClicked(MouseEvent e) {shapeLabel1.setVisible(false);deleteShape(clickCounter[1], 1);}});
+		shapeLabel2.addMouseListener(new MouseAdapter() { public void mouseClicked(MouseEvent e) {shapeLabel2.setVisible(false);deleteShape(clickCounter[2], 2);}});
+		shapeLabel3.addMouseListener(new MouseAdapter() { public void mouseClicked(MouseEvent e) {shapeLabel3.setVisible(false);deleteShape(clickCounter[3], 3);}});
+		shapeLabel4.addMouseListener(new MouseAdapter() { public void mouseClicked(MouseEvent e) {shapeLabel4.setVisible(false);deleteShape(clickCounter[4], 4);}});
+		shapeLabel5.addMouseListener(new MouseAdapter() { public void mouseClicked(MouseEvent e) {shapeLabel5.setVisible(false);deleteShape(clickCounter[5], 5);}});
+		shapeLabel6.addMouseListener(new MouseAdapter() { public void mouseClicked(MouseEvent e) {shapeLabel6.setVisible(false);deleteShape(clickCounter[6], 6);}});
+		shapeLabel7.addMouseListener(new MouseAdapter() { public void mouseClicked(MouseEvent e) {shapeLabel7.setVisible(false);deleteShape(clickCounter[7], 7);}});
+		shapeLabel8.addMouseListener(new MouseAdapter() { public void mouseClicked(MouseEvent e) {shapeLabel8.setVisible(false);deleteShape(clickCounter[8], 8);}}); 
 	}
 	
-	public static void displayCreationCircles(int x, int y)
+	public static void displayCreationShapes(int x, int y)
 	{
 		//Initializing a counter
-		int currentCircle = 9;
+		int currentShape = 9;
 		
 		//Loops through counter array to find first empty index
-		for (int i = 0; i < circleCounter.length; i++)
-			if (circleCounter[i] == 0)
+		for (int i = 0; i < clickCounter.length; i++)
+			if (clickCounter[i] == 0)
 			{
-				currentCircle = i;
+				currentShape = i;
 				break;
 			}
 
-		if (currentCircle < 9) {
+		if (currentShape < 9) {
 			int size;
 			
 			switch (resourcePath)
 			{
-			case "/passCreationCircle20x20.png":
+			case "/passCreationSquare20x20.png":
 				size = 20;
 				break;
-			case "/passCreationCircle30x30.png":
+			case "/passCreationSquare30x30.png":
 				size = 30;
 				break;
-			case "/passCreationCircle40x40.png":
+			case "/passCreationSquare40x40.png":
 				size = 40;
 				break;
-			case "/passCreationCircle50x50.png":
+			case "/passCreationSquare50x50.png":
 				size = 50;
 				break;
 			default:
 				size = 0;
 			}
 			
-			switch (currentCircle) {
+			switch (currentShape) {
 			case 0:
-				circleLabel0.setIcon(new ImageIcon(MainGUI.class.getResource(resourcePath)));
-				circleLabel0.setVisible(true);
-				circleLabel0.setBounds(x-(size/2), y-(size/2), size, size);
+				shapeLabel0.setIcon(new ImageIcon(MainGUI.class.getResource(resourcePath)));
+				shapeLabel0.setVisible(true);
+				shapeLabel0.setBounds(x-(size/2), y-(size/2), size, size);
 				break;
 			case 1:
-				circleLabel1.setIcon(new ImageIcon(MainGUI.class.getResource(resourcePath)));
-				circleLabel1.setVisible(true);
-				circleLabel1.setBounds(x-(size/2), y-(size/2), size, size);
+				shapeLabel1.setIcon(new ImageIcon(MainGUI.class.getResource(resourcePath)));
+				shapeLabel1.setVisible(true);
+				shapeLabel1.setBounds(x-(size/2), y-(size/2), size, size);
 				break;
 			case 2:
-				circleLabel2.setIcon(new ImageIcon(MainGUI.class.getResource(resourcePath)));
-				circleLabel2.setVisible(true);
-				circleLabel2.setBounds(x-(size/2), y-(size/2), size, size);
+				shapeLabel2.setIcon(new ImageIcon(MainGUI.class.getResource(resourcePath)));
+				shapeLabel2.setVisible(true);
+				shapeLabel2.setBounds(x-(size/2), y-(size/2), size, size);
 				break;
 			case 3:
-				circleLabel3.setIcon(new ImageIcon(MainGUI.class.getResource(resourcePath)));
-				circleLabel3.setVisible(true);
-				circleLabel3.setBounds(x-(size/2), y-(size/2), size, size);
+				shapeLabel3.setIcon(new ImageIcon(MainGUI.class.getResource(resourcePath)));
+				shapeLabel3.setVisible(true);
+				shapeLabel3.setBounds(x-(size/2), y-(size/2), size, size);
 				break;
 			case 4:
-				circleLabel4.setIcon(new ImageIcon(MainGUI.class.getResource(resourcePath)));
-				circleLabel4.setVisible(true);
-				circleLabel4.setBounds(x-(size/2), y-(size/2), size, size);
+				shapeLabel4.setIcon(new ImageIcon(MainGUI.class.getResource(resourcePath)));
+				shapeLabel4.setVisible(true);
+				shapeLabel4.setBounds(x-(size/2), y-(size/2), size, size);
 				break;
 			case 5:
-				circleLabel5.setIcon(new ImageIcon(MainGUI.class.getResource(resourcePath)));
-				circleLabel5.setVisible(true);
-				circleLabel5.setBounds(x-(size/2), y-(size/2), size, size);
+				shapeLabel5.setIcon(new ImageIcon(MainGUI.class.getResource(resourcePath)));
+				shapeLabel5.setVisible(true);
+				shapeLabel5.setBounds(x-(size/2), y-(size/2), size, size);
 				break;
 			case 6:
-				circleLabel6.setIcon(new ImageIcon(MainGUI.class.getResource(resourcePath)));
-				circleLabel6.setVisible(true);
-				circleLabel6.setBounds(x-(size/2), y-(size/2), size, size);
+				shapeLabel6.setIcon(new ImageIcon(MainGUI.class.getResource(resourcePath)));
+				shapeLabel6.setVisible(true);
+				shapeLabel6.setBounds(x-(size/2), y-(size/2), size, size);
 				break;
 			case 7:
-				circleLabel7.setIcon(new ImageIcon(MainGUI.class.getResource(resourcePath)));
-				circleLabel7.setVisible(true);
-				circleLabel7.setBounds(x-(size/2), y-(size/2), size, size);
+				shapeLabel7.setIcon(new ImageIcon(MainGUI.class.getResource(resourcePath)));
+				shapeLabel7.setVisible(true);
+				shapeLabel7.setBounds(x-(size/2), y-(size/2), size, size);
 				break;
 			case 8:
-				circleLabel8.setIcon(new ImageIcon(MainGUI.class.getResource(resourcePath)));
-				circleLabel8.setVisible(true);
-				circleLabel8.setBounds(x-(size/2), y-(size/2), size, size);
+				shapeLabel8.setIcon(new ImageIcon(MainGUI.class.getResource(resourcePath)));
+				shapeLabel8.setVisible(true);
+				shapeLabel8.setBounds(x-(size/2), y-(size/2), size, size);
 				break;
 			default:
 				break;
@@ -210,16 +210,16 @@ public class DisplayPassword {
 	{
 		Mode mode = MainGUI.getProgramMode();
 		if (mode == Mode.CREATE || mode == Mode.ENTER)
-		displayCreationCircles(x, y);
+		displayCreationShapes(x, y);
 	}
 	
 	
 	public static int getLargest()
 	{
 		int largestNum = 0;
-		for (int i = 0; i < circleCounter.length; i++)
-			if (largestNum < circleCounter[i])
-				largestNum = circleCounter[i];
+		for (int i = 0; i < clickCounter.length; i++)
+			if (largestNum < clickCounter[i])
+				largestNum = clickCounter[i];
 		
 		return largestNum;
 	}
@@ -228,30 +228,30 @@ public class DisplayPassword {
 	{
 		int largestNum = getLargest();
 		
-		for (int i = 0; i < circleCounter.length; i++)
-			if (circleCounter[i] == 0)
+		for (int i = 0; i < clickCounter.length; i++)
+			if (clickCounter[i] == 0)
 			{
-				circleCounter[i] = largestNum + 1;
+				clickCounter[i] = largestNum + 1;
 				break;
 			}
 	}
 	
-	public static void deleteCircleCounterIndex(int index)
+	public static void deleteClickCounterIndex(int index)
 	{
-		for (int i = 0; i < circleCounter.length; i++)
-			if (circleCounter[i] != 0 && circleCounter[index] < circleCounter[i])
-				circleCounter[i] = circleCounter[i] - 1;
+		for (int i = 0; i < clickCounter.length; i++)
+			if (clickCounter[i] != 0 && clickCounter[index] < clickCounter[i])
+				clickCounter[i] = clickCounter[i] - 1;
 		
-		circleCounter[index] = 0;
+		clickCounter[index] = 0;
 	}
 	
-	public static void deleteCircle(int coordIndex, int counterIndex)
+	public static void deleteShape(int coordIndex, int counterIndex)
 	{
 		if (MainGUI.getProgramMode() == Mode.CREATE)
 		{
 			deleteCreationNums();
 			
-			deleteCircleCounterIndex(counterIndex);
+			deleteClickCounterIndex(counterIndex);
 			
 			int [][] clickCoords = CreatePassword.getCoords();
 			int [] clickSizes = CreatePassword.getSizes();
@@ -262,31 +262,31 @@ public class DisplayPassword {
 			CreatePassword.setCoords(clickCoords);
 			CreatePassword.setSizes(clickSizes);
 			
-			displayCircleNums();
+			displayShapeNums();
 		}
 		
 		if (MainGUI.getProgramMode() == Mode.ENTER)
 		{
 			ApprovePassword.resetCounter();
-    		deleteCreationCircles();
+    		deleteCreationShapes();
 		}
 		
 		mainFrame.revalidate();
 		mainFrame.repaint();
 	}
 	
-	public static void deleteCreationCircles()
+	public static void deleteCreationShapes()
 	{
 		resetCounter();
-		circleLabel0.setVisible(false);
-		circleLabel1.setVisible(false);
-		circleLabel2.setVisible(false);
-		circleLabel3.setVisible(false);
-		circleLabel4.setVisible(false);
-		circleLabel5.setVisible(false);
-		circleLabel6.setVisible(false);
-		circleLabel7.setVisible(false);
-		circleLabel8.setVisible(false);
+		shapeLabel0.setVisible(false);
+		shapeLabel1.setVisible(false);
+		shapeLabel2.setVisible(false);
+		shapeLabel3.setVisible(false);
+		shapeLabel4.setVisible(false);
+		shapeLabel5.setVisible(false);
+		shapeLabel6.setVisible(false);
+		shapeLabel7.setVisible(false);
+		shapeLabel8.setVisible(false);
 		deleteCreationNums();
 		mainFrame.revalidate();
 		mainFrame.repaint();
@@ -312,37 +312,37 @@ public class DisplayPassword {
 		switch (path)
 		{
 		case 1:
-			resourcePath = "/passCreationCircle20x20.png";
+			resourcePath = "/passCreationSquare20x20.png";
 			break;
 		case 2:
-			resourcePath = "/passCreationCircle30x30.png";
+			resourcePath = "/passCreationSquare30x30.png";
 			break;
 		case 3:
-			resourcePath = "/passCreationCircle40x40.png";
+			resourcePath = "/passCreationSquare40x40.png";
 			break;
 		case 4:
-			resourcePath = "/passCreationCircle50x50.png";
+			resourcePath = "/passCreationSquare50x50.png";
 			break;
 		default:
-			resourcePath = "/passCreationCircle40x40.png";
+			resourcePath = "/passCreationSquare40x40.png";
 		}
 	}
 	
-	public static int getCircleSize()
+	public static int getShapeSize()
 	{
 		int size = 0;
 		switch (resourcePath)
 		{
-		case "/passCreationCircle20x20.png":
+		case "/passCreationSquare20x20.png":
 			size = 20;
 			break;
-		case "/passCreationCircle30x30.png":
+		case "/passCreationSquare30x30.png":
 			size = 30;
 			break;
-		case "/passCreationCircle40x40.png":
+		case "/passCreationSquare40x40.png":
 			size = 40;
 			break;
-		case "/passCreationCircle50x50.png":
+		case "/passCreationSquare50x50.png":
 			size = 50;
 			break;
 		default:
@@ -353,27 +353,27 @@ public class DisplayPassword {
 	
 	public static void resetCounter()
 	{
-		for (int i = 0; i < circleCounter.length; i++)
-			circleCounter[i] = 0;
+		for (int i = 0; i < clickCounter.length; i++)
+			clickCounter[i] = 0;
 	}
 	
-	public static int countCircles()
+	public static int countShapes()
 	{
 		int count = 0;
-		for (int i = 0; i < circleCounter.length; i++)
-			if (circleCounter[i] != 0)
+		for (int i = 0; i < clickCounter.length; i++)
+			if (clickCounter[i] != 0)
 				count++;
 		return count;
 	}
 
-	public static void displayCircleNums()
+	public static void displayShapeNums()
 	{
 		int[][] clickCoords = CreatePassword.getCoords();
 		int[] clickSizes = CreatePassword.getSizes();
 		
-		for (int i = 0; i < circleCounter.length; i++)
+		for (int i = 0; i < clickCounter.length; i++)
 		{
-			switch (circleCounter[i])
+			switch (clickCounter[i])
 			{
 			case 1:
 				numLabel1.setVisible(true);

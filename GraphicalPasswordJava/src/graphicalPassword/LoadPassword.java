@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Base64;
 import java.util.Scanner;
 
@@ -17,8 +18,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
-import org.apache.commons.io.FileUtils;
 
 public class LoadPassword {
 	void main(String passName, String filePath, JFrame mainFrame, JPanel mainPanel, JPanel overlayPanel, JLabel pictureLabel)
@@ -64,9 +63,10 @@ public class LoadPassword {
 		File textPassSaveDir = new File(currentDir + File.separator + encryptedFolderName + File.separator + passName + "_TextPass" + ".txt");
 		
 		byte[] encryptedData = null;
+		
 		try
 		{
-			encryptedData = FileUtils.readFileToByteArray(textPassSaveDir);
+			encryptedData = Files.readAllBytes(textPassSaveDir.toPath());
 		}
 		catch (IOException e)
 		{
@@ -88,6 +88,7 @@ public class LoadPassword {
 	
 	public static String[] loadCoordsFile(String passName)
 	{
+		//The coords file contains both the coords and the resolution
 		String currentDir = System.getProperty("user.dir");
 		String encryptedFolderName = "EncryptedData";
 		
