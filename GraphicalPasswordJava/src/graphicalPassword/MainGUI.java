@@ -153,7 +153,7 @@ static boolean darkMode = false;
 		options.setFont(new Font("Segoe UI", Font.BOLD, 14));
 		userMenu.add(options);
 		
-		//The panel that holds password creation display circles
+		//The panel that holds password creation display shapes
 		overlayPanel.setBorder(null);
 		overlayPanel.setBounds(0, menuBarSize, windowRes[0], windowRes[1]);
 		mainFrame.getContentPane().add(overlayPanel);

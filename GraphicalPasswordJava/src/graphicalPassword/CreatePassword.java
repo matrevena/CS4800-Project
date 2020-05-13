@@ -28,7 +28,7 @@ import graphicalPassword.MainGUI.Mode;
 public class CreatePassword {
 	//Array saves the x and y coords of the user's chosen click locations click
 	static int[][] clickCoords = new int[9][2];
-	//Array saves the size of each of user's chosen click circles click
+	//Array saves the size of each of user's chosen click shapes
 	static int[] clickSizes = new int[9];
 	
 	public static void main(String directory, JFrame mainFrame, JPanel mainPanel, JPanel overlayPanel, JLabel pictureLabel, JMenuBar menuBar, JMenu controlsMenu, JMenu userMenu)
@@ -91,12 +91,12 @@ public class CreatePassword {
 			        	if (clickCoords [i][0] == 0)
 			        	{
 			        		//Saves the size of each click
-			        		clickSizes[i] = DisplayPassword.getCircleSize();
+			        		clickSizes[i] = DisplayPassword.getShapeSize();
 			        		
 			        		clickCoords[i][0] = x;
 			        		clickCoords[i][1] = y;
 			        		
-			        		DisplayPassword.displayCircleNums();
+			        		DisplayPassword.displayShapeNums();
 			        		
 			        		break;
 			        	}
@@ -225,25 +225,25 @@ public class CreatePassword {
 		JButton sizeOption1BtnR = new JButton();
 		sizeOption1BtnR.setBorder(null);
 		sizeOption1BtnR.setPreferredSize(new Dimension((int)(creationPanelR.getWidth()*sizeRatio), (int)(creationPanelR.getHeight()*.5)));
-		sizeOption1BtnR.setIcon(new ImageIcon(MainGUI.class.getResource("/passCreationCircle20x20.png")));
+		sizeOption1BtnR.setIcon(new ImageIcon(MainGUI.class.getResource("/passCreationSquare20x20.png")));
 		nestedPanelR2.add(sizeOption1BtnR);
 		
 		JButton sizeOption2BtnR = new JButton();
 		sizeOption2BtnR.setBorder(null);
 		sizeOption2BtnR.setPreferredSize(new Dimension((int)(creationPanelR.getWidth()*sizeRatio), (int)(creationPanelR.getHeight()*.5)));
-		sizeOption2BtnR.setIcon(new ImageIcon(MainGUI.class.getResource("/passCreationCircle30x30.png")));
+		sizeOption2BtnR.setIcon(new ImageIcon(MainGUI.class.getResource("/passCreationSquare30x30.png")));
 		nestedPanelR2.add(sizeOption2BtnR);
 		
 		JButton sizeOption3BtnR = new JButton();
 		sizeOption3BtnR.setBorder(null);
 		sizeOption3BtnR.setPreferredSize(new Dimension((int)(creationPanelR.getWidth()*sizeRatio), (int)(creationPanelR.getHeight()*.5)));
-		sizeOption3BtnR.setIcon(new ImageIcon(MainGUI.class.getResource("/passCreationCircle40x40.png")));
+		sizeOption3BtnR.setIcon(new ImageIcon(MainGUI.class.getResource("/passCreationSquare40x40.png")));
 		nestedPanelR2.add(sizeOption3BtnR);
 		
 		JButton sizeOption4BtnR = new JButton();
 		sizeOption4BtnR.setBorder(null);
 		sizeOption4BtnR.setPreferredSize(new Dimension((int)(creationPanelR.getWidth()*sizeRatio), (int)(creationPanelR.getHeight()*.5)));
-		sizeOption4BtnR.setIcon(new ImageIcon(MainGUI.class.getResource("/passCreationCircle50x50.png")));
+		sizeOption4BtnR.setIcon(new ImageIcon(MainGUI.class.getResource("/passCreationSquare50x50.png")));
 		nestedPanelR2.add(sizeOption4BtnR);
 		
 		JButton randomPassBtnR = new JButton();
@@ -291,25 +291,25 @@ public class CreatePassword {
 		JButton sizeOption1BtnL = new JButton();
 		sizeOption1BtnL.setBorder(null);
 		sizeOption1BtnL.setPreferredSize(new Dimension((int)(creationPanelL.getWidth()*sizeRatio), (int)(creationPanelL.getHeight()*.5)));
-		sizeOption1BtnL.setIcon(new ImageIcon(MainGUI.class.getResource("/passCreationCircle20x20.png")));
+		sizeOption1BtnL.setIcon(new ImageIcon(MainGUI.class.getResource("/passCreationSquare20x20.png")));
 		nestedPanelL2.add(sizeOption1BtnL);
 		
 		JButton sizeOption2BtnL = new JButton();
 		sizeOption2BtnL.setBorder(null);
 		sizeOption2BtnL.setPreferredSize(new Dimension((int)(creationPanelL.getWidth()*sizeRatio), (int)(creationPanelL.getHeight()*.5)));
-		sizeOption2BtnL.setIcon(new ImageIcon(MainGUI.class.getResource("/passCreationCircle30x30.png")));
+		sizeOption2BtnL.setIcon(new ImageIcon(MainGUI.class.getResource("/passCreationSquare30x30.png")));
 		nestedPanelL2.add(sizeOption2BtnL);
 		
 		JButton sizeOption3BtnL = new JButton();
 		sizeOption3BtnL.setBorder(null);
 		sizeOption3BtnL.setPreferredSize(new Dimension((int)(creationPanelL.getWidth()*sizeRatio), (int)(creationPanelL.getHeight()*.5)));
-		sizeOption3BtnL.setIcon(new ImageIcon(MainGUI.class.getResource("/passCreationCircle40x40.png")));
+		sizeOption3BtnL.setIcon(new ImageIcon(MainGUI.class.getResource("/passCreationSquare40x40.png")));
 		nestedPanelL2.add(sizeOption3BtnL);
 		
 		JButton sizeOption4BtnL = new JButton();
 		sizeOption4BtnL.setBorder(null);
 		sizeOption4BtnL.setPreferredSize(new Dimension((int)(creationPanelR.getWidth()*sizeRatio), (int)(creationPanelR.getHeight()*.5)));
-		sizeOption4BtnL.setIcon(new ImageIcon(MainGUI.class.getResource("/passCreationCircle50x50.png")));
+		sizeOption4BtnL.setIcon(new ImageIcon(MainGUI.class.getResource("/passCreationSquare50x50.png")));
 		nestedPanelL2.add(sizeOption4BtnL);
 		
 		JButton randomPassBtnL = new JButton();
@@ -529,7 +529,7 @@ public class CreatePassword {
 		pictureLabel.setIcon(null);
 		DisplayPassword.setResourcePath(3);
 		
-		DisplayPassword.deleteCreationCircles();
+		DisplayPassword.deleteCreationShapes();
 		pictureLabel.removeMouseListener(captureClicks);
 		mainFrame.revalidate();
 		mainFrame.repaint();

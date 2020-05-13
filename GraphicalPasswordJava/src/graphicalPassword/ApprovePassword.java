@@ -135,7 +135,7 @@ public class ApprovePassword {
 					        	if (!correct)
 					        	{
 					        		clickCounter = 0;
-					        		DisplayPassword.deleteCreationCircles();
+					        		DisplayPassword.deleteCreationShapes();
 					        	}
 					        	else
 					        		clickCounter++;
@@ -274,7 +274,7 @@ public class ApprovePassword {
 		enterPassBtn = MainGUI.removeActionListeners(endEnterModeBtn);
 		pictureLabel.removeMouseListener(captureClicks);
 		
-		DisplayPassword.deleteCreationCircles();
+		DisplayPassword.deleteCreationShapes();
 		
 		reset2DArray(enterClickCoords);
 		reset1DArray(enterClickSizes);
