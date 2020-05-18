@@ -2,6 +2,12 @@ package graphicalPassword;
 //Main Author: Peter Giblin
 //Tested / Debugged by: Peter Giblin
 
+/*
+Loads all aspects on a graphical password including the images files that the user selects.
+Images are scaled to the size of the program window and set as the icon of the pictureLabel JLabel.
+This class also includes a method to delete graphical passwords and all of their related files.
+ */
+
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -194,10 +200,15 @@ public class LoadPassword {
 			File loadedPic = new File(chosenPassFilePath);
 			String passName = loadedPic.getName().substring(0, loadedPic.getName().length() - 4);
 			
-			deletePic(passName, picFilePath, mainFrame);
-			deleteTextPass(passName, encryptedFilePath, mainFrame);
-			deleteCoords(passName, encryptedFilePath, mainFrame);
-			deleteEncryptionKey(passName, encryptedFilePath, mainFrame);
+			if (ApprovePassword.checkUser(chosenPassFilePath))
+			{
+				deletePic(passName, picFilePath, mainFrame);
+				deleteTextPass(passName, encryptedFilePath, mainFrame);
+				deleteCoords(passName, encryptedFilePath, mainFrame);
+				deleteEncryptionKey(passName, encryptedFilePath, mainFrame);
+			}
+			else
+				JOptionPane.showMessageDialog(mainFrame, "You have tried to delete a password that belongs to a different user.", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 

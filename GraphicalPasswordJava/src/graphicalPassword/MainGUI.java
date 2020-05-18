@@ -3,6 +3,12 @@ package graphicalPassword;
 //Matthaw Trevena added all of the userName functionality mainly in initialize()
 //Tested / Debugged by: Peter Giblin
 
+/*
+The MainGUI class is the first to be run during the program.
+It serves as the central user interface where the user can load any of the other functionalities.
+This class also loads in the config file and contains the option menu used to modify the config.txt file.
+ */
+
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -71,7 +77,7 @@ static JComboBox<?> resolutionBox = new JComboBox<Object>(resolutionOptions);
 static boolean darkMode = false;
 
 //global variable for an individual user's userName
-static String userName = "New User";
+static String userName = "User";
 //-----------------------
 
 
@@ -256,7 +262,7 @@ static String userName = "New User";
 		if (!config.exists())
 		{
 			JOptionPane.showMessageDialog(mainFrame, "Welcome to Graphical Password. Since this is your first time using the program, please enter a username.", "Welcome", JOptionPane.INFORMATION_MESSAGE);
-			userName = "New User";
+			userName = "User";
 			options();
 		}
 	}

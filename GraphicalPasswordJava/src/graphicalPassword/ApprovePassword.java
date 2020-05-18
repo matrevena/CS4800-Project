@@ -3,6 +3,13 @@ package graphicalPassword;
 //Matthaw Trevena wrote the initial ApprovePassword class and helped design this version
 //Tested / Debugged by: Peter Giblin
 
+/*
+The class that is used when the user attempts to enter a graphical password.
+Checks the coordinates of each click as they are entered, if a coord is not the correct code the process resets.
+Also checks if the user is the same user that created the password.
+The innitiateEnterMode method contains the logic that captures and tracks each click.
+ */
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -59,9 +66,8 @@ public class ApprovePassword {
 		{
 			File loadedPic = new File(filePath);
 			String passName = loadedPic.getName().substring(0, loadedPic.getName().length() - 4);
-			String passUser = passName.substring(0, passName.indexOf("_")).replace("\r", "").replace("\n", "").replace(" ", "");
 			
-			if(passUser.contentEquals(MainGUI.userName))
+			if(checkUser(filePath))
 			{
 				LoadPassword.loadPicture(filePath, mainFrame, mainPanel, overlayPanel, pictureLabel);
 				
@@ -177,7 +183,7 @@ public class ApprovePassword {
 			}
 			else
 			{
-				JOptionPane.showMessageDialog(mainFrame, "You have tried to load a password belonging to a different user.", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(mainFrame, "You have tried to load a password that belongs to a different user.", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 			
 		}
@@ -205,6 +211,18 @@ public class ApprovePassword {
 		
 		mainFrame.revalidate();
 		mainFrame.repaint();
+	}
+	
+	public static boolean checkUser(String filePath)
+	{
+		File loadedPic = new File(filePath);
+		String passName = loadedPic.getName().substring(0, loadedPic.getName().length() - 4);
+		String passUser = passName.substring(0, passName.indexOf("[")).replace("\r", "").replace("\n", "");
+		
+		if(passUser.contentEquals(MainGUI.userName))
+			return true;
+		else
+			return false;
 	}
 	
 	public static int countArrayCoords(int[][] clickCoords)

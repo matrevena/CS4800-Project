@@ -3,6 +3,13 @@ package graphicalPassword;
 //Darren Suon wrote getRandomPass()
 //Tested / Debugged by: Peter Giblin
 
+/*
+Creates the user interface elements that allow the user to change settings during the creation of a password.
+This class also stores the coordinates and area of the user’s clicks up to nine click locations.
+Most of the code is for creating the customization menu that contains the creation options.
+Also contains a random password generation method.
+ */
+
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -71,9 +78,20 @@ public class CreatePassword {
 			JTextField passNameTfL = new JTextField();
 			
 			File loadedPic = new File(filePath);
+			String picName = loadedPic.getName();
+			
 			//Sets the name of the uploaded image as the graphical password name (can be changed by the user)
-			passNameTfR.setText(loadedPic.getName().substring(0, loadedPic.getName().length() - 4));
-			passNameTfL.setText(loadedPic.getName().substring(0, loadedPic.getName().length() - 4));
+			passNameTfR.setText(picName.substring(0, picName.length() - 4));
+			
+			//Checks if the uploaded picture is formatted in the same way as graphical password pictures
+			//And then if the user that is named in the picture name is the same
+			//This is used for edit password
+			if (picName.contains("["))
+			{
+				System.out.println(picName.substring(0, picName.indexOf("[")).replace("\r", "").replace("\n", ""));
+				if (picName.substring(0, picName.indexOf("[")).replace("\r", "").replace("\n", "").contentEquals(MainGUI.userName))
+					passNameTfR.setText(picName.substring(picName.indexOf("[") + 1, picName.length()).replace("\r", "").replace("\n", ""));
+			}
 			
 			LoadPassword.loadPicture(filePath, mainFrame, mainPanel, overlayPanel, pictureLabel);
 			

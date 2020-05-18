@@ -2,6 +2,12 @@ package graphicalPassword;
 //Main Author: Peter Giblin
 //Tested / Debugged by: Peter Giblin
 
+/*
+The SavePassword class is the class responsible for saving each aspect of the password into files.
+The names of each of these files is based on the username loaded from the config and the password name that
+was entered during creation of the password.
+ */
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -41,7 +47,7 @@ public class SavePassword {
 			picFolderDir.mkdir();
 		}
 		
-		File picSaveDir = new File(currentDir + File.separator + picFolderName + File.separator + userName + "_" + passName + "." + picExtension);
+		File picSaveDir = new File(currentDir + File.separator + picFolderName + File.separator + userName + "[" + passName + "." + picExtension);
 		
 		BufferedImage pic = null;
 		try
@@ -72,7 +78,7 @@ public class SavePassword {
 			coordFolderDir.mkdir();
 		}
 		
-		File coordsSaveDir = new File(currentDir + File.separator + coordFolderName + File.separator + userName + "_" + passName + "_Coords" + ".txt");
+		File coordsSaveDir = new File(currentDir + File.separator + coordFolderName + File.separator + userName + "[" + passName + "_Coords" + ".txt");
 		
 		String csvCoordsX = "";
 		String csvCoordsY = "";
@@ -133,7 +139,7 @@ public class SavePassword {
 			textPassFolderDir.mkdir();
 		}
 		
-		File textPassSaveDir = new File(currentDir + File.separator + textPassFolderName + File.separator + userName + "_" + passName + "_TextPass" + ".txt");
+		File textPassSaveDir = new File(currentDir + File.separator + textPassFolderName + File.separator + userName + "[" + passName + "_TextPass" + ".txt");
 		
 		byte[] encryptedData = Encryption.encryptString(textPass, encryptionKey);
 		
@@ -151,7 +157,7 @@ public class SavePassword {
 	
 	public static void saveEncryptionKey(String passName, SecretKey encryptionKey, String currentDir, String keyFolderName, String userName)
 	{
-		File keySaveDir = new File(currentDir + File.separator + keyFolderName + File.separator + userName + "_" + passName + "_Key" + ".txt");
+		File keySaveDir = new File(currentDir + File.separator + keyFolderName + File.separator + userName + "[" + passName + "_Key" + ".txt");
 		
 		String encodedKey = Base64.getEncoder().encodeToString(encryptionKey.getEncoded());
 		

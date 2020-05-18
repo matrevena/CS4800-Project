@@ -2,6 +2,12 @@ package graphicalPassword;
 //Main Author: Peter Giblin
 //Tested / Debugged by: Peter Giblin
 
+/*
+Displays a visual representation of the user’s click locations for use in the creation and entering of a password.
+Click areas are displayed as semi-transparent squares that have the same size of the click area that is being stored.
+If these shapes are clicked on then they are removed and the arrays that track the shapes counter and the click coords are adjusted.
+ */
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;

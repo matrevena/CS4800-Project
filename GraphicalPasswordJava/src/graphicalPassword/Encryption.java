@@ -2,6 +2,11 @@ package graphicalPassword;
 //Main Author: Darren Suon
 //Tested / Debugged by: Darren Suon
 
+/*
+Encrypts strings and decrypts byte arrays. Encryption keys are generated when a string (password) needs to be encrypted.
+This key and password both need to be saved. This encryption method uses a cipher.
+ */
+
 import java.io.File;
 import java.security.NoSuchAlgorithmException;
 
